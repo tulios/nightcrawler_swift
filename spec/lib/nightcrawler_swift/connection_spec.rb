@@ -60,16 +60,6 @@ describe NightcrawlerSwift::Connection do
           and_return(auth_success_response)
       end
 
-      it "stores the auth response" do
-        subject.connect!
-        expect(subject.auth_response).to_not be_nil
-
-
-        auth_success_json.keys.each do |key|
-          expect(subject.auth_response.send(key)).to eql(auth_success_json[key])
-        end
-      end
-
       it "stores the token id" do
         subject.connect!
         expect(subject.token_id).to eql(auth_success_json["access"]["token"]["id"])

@@ -9,37 +9,41 @@ module NightcrawlerSwift
     end
 
     def connect!
-      response = RestClient.post(
-        opts.auth_url,
-        {
-          auth: {
-            tenantName: opts.tenant_name,
-            passwordCredentials: {username: opts.username, password: opts.password}
-          }
-        }.to_json,
+      auth_response = authenticate!
 
-        content_type: :json,
-        accept: :json,
-      )
-
-      @auth_response = OpenStruct.new(JSON.parse(response.body))
-      @token_id = @auth_response.access["token"]["id"]
-      @expires_at = @auth_response.access["token"]["expires"]
+      @token_id = auth_response.access["token"]["id"]
+      @expires_at = auth_response.access["token"]["expires"]
       @expires_at = DateTime.parse(@expires_at).to_time
 
-      @admin_url = @auth_response.access["serviceCatalog"].first["endpoints"].first["adminURL"]
+      @admin_url = auth_response.access["serviceCatalog"].first["endpoints"].first["adminURL"]
       @upload_url = "#{@admin_url}/#{opts.bucket}"
-      @public_url = @auth_response.access["serviceCatalog"].first["endpoints"].first["publicURL"]
+      @public_url = auth_response.access["serviceCatalog"].first["endpoints"].first["publicURL"]
 
       NightcrawlerSwift.logger.info  "Connected, token_id: #{@token_id}"
       self
-
-    rescue StandardError => e
-      raise Exceptions::ConnectionError.new(e)
     end
 
     def connected?
       !self.token_id.nil? and self.expires_at > Time.now
+    end
+
+    private
+
+    def authenticate!
+      auth_options = {
+        tenantName: opts.tenant_name,
+        passwordCredentials: {username: opts.username, password: opts.password}
+      }
+
+      response = RestClient.post(
+        opts.auth_url, { auth: auth_options }.to_json,
+        content_type: :json,
+        accept: :json,
+      )
+
+      OpenStruct.new(JSON.parse(response.body))
+    rescue StandardError => e
+      raise Exceptions::ConnectionError.new(e)
     end
   end
 end
