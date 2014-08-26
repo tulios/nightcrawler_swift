@@ -1,0 +1,62 @@
+{
+   "access" : {
+      "serviceCatalog" : [
+         {
+            "name" : "swift",
+            "endpoints_links" : [],
+            "type" : "object-store",
+            "endpoints" : [
+               {
+                  "publicURL" : "http://public.url.com",
+                  "internalURL" : "http://internal.url.com",
+                  "adminURL" : "http://api.url.com",
+                  "region" : "RegionOne",
+                  "id" : "1"
+               }
+            ]
+         },
+         {
+            "name" : "keystone",
+            "endpoints_links" : [],
+            "type" : "identity",
+            "endpoints" : [
+               {
+                  "publicURL" : "http://auth.url.com:123/v2.0",
+                  "internalURL" : "https://auth.url.com:123/v2.0",
+                  "adminURL" : "https://auth.url.com:321/v2.0",
+                  "region" : "RegionOne",
+                  "id" : "2"
+               }
+            ]
+         }
+      ],
+      "user" : {
+         "roles" : [
+            {
+               "name" : "swiftoperator"
+            }
+         ],
+         "roles_links" : [],
+         "name" : "User Name 1",
+         "id" : "3",
+         "username" : "username1"
+      },
+      "metadata" : {
+         "roles" : [
+            "4"
+         ],
+         "is_admin" : 0
+      },
+      "token" : {
+         "tenant" : {
+            "name" : "tenant_username1",
+            "id" : "5",
+            "description" : "some desc",
+            "enabled" : true
+         },
+         "issued_at" : "2014-08-25T17:53:26.667691",
+         "id" : "5",
+         "expires" : "2014-08-25T18:53:26Z"
+      }
+   }
+}

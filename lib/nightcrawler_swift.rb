@@ -1,3 +1,4 @@
+require "logger"
 require "ostruct"
 require "rest_client"
 require "nightcrawler_swift/version"
@@ -11,13 +12,10 @@ module NightcrawlerSwift
   class << self
 
     attr_accessor :logger
+    attr_reader :connection
 
     def logger
       @logger || Logger.new(STDOUT)
-    end
-
-    def connection
-      @connection
     end
 
     def configure opts = {}

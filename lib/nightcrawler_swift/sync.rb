@@ -1,12 +1,8 @@
 module NightcrawlerSwift
-  class Sync
-
-    def initialize connection
-      @connection = connection
-    end
+  class Sync < Command
 
     def execute dir_path
-      upload = Upload.new @connection
+      upload = Upload.new
 
       NightcrawlerSwift.logger.info "dir_path: #{dir_path}"
       entries = Dir["#{dir_path}/**/**"]

@@ -2,7 +2,7 @@ module NightcrawlerSwift
   class Connection
     attr_accessor :opts, :auth_response, :token_id, :admin_url, :upload_url
 
-    # Hash with: tenant_name, username, password, auth_url, bucket
+    # Hash with: bucket, tenant_name, username, password, auth_url
     #
     def initialize opts = {}
       @opts = OpenStruct.new opts
