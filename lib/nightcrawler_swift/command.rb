@@ -24,8 +24,8 @@ module NightcrawlerSwift
     end
 
     def prepare_params params
-      params.merge! body: "", headers: {}
-      params["X-Storage-Token"] = connection.token_id
+      params[:headers] ||= {}
+      params[:headers]["X-Storage-Token"] = connection.token_id
     end
   end
 end
