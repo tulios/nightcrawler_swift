@@ -6,6 +6,10 @@ describe NightcrawlerSwift::Sync do
     NightcrawlerSwift::Sync.new
   end
 
+  before do
+    NightcrawlerSwift.logger = Logger.new(StringIO.new)
+  end
+
   describe "#execute" do
 
     let :upload do
