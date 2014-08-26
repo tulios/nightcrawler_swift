@@ -75,6 +75,12 @@ describe NightcrawlerSwift::Connection do
         expect(subject.token_id).to eql(auth_success_json["access"]["token"]["id"])
       end
 
+      it "stores the expires_at" do
+        subject.connect!
+        expires_at = DateTime.parse(auth_success_json["access"]["token"]["expires"]).to_time
+        expect(subject.expires_at).to eql(expires_at)
+      end
+
       it "stores the admin_url" do
         subject.connect!
         expect(subject.admin_url).to eql(auth_success_json["access"]["serviceCatalog"].first["endpoints"].first["adminURL"])
@@ -98,7 +104,20 @@ describe NightcrawlerSwift::Connection do
       end
 
       it "raises NightcrawlerSwift::Exceptions::ConnectionError" do
+        expect { subject.connect! }.to raise_error(NightcrawlerSwift::Exceptions::ConnectionError)
       end
+    end
+  end
+
+  describe "#connected?" do
+    it "checks if token_id exists and is still valid" do
+      expect(subject.token_id).to be_nil
+      expect(subject.connected?).to be false
+
+      expires_at = DateTime.now.to_time + 11
+      allow(subject).to receive(:expires_at).and_return(expires_at)
+      allow(subject).to receive(:token_id).and_return("token")
+      expect(subject.connected?).to be true
     end
   end
 
