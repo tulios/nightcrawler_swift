@@ -1,16 +1,19 @@
 module NightcrawlerSwift
   class Sync < Command
 
-    def execute dir_path
-      upload = Upload.new
+    def initialize
+      @upload = Upload.new
+      @logger = NightcrawlerSwift.logger
+    end
 
-      NightcrawlerSwift.logger.info "dir_path: #{dir_path}"
-      entries = Dir["#{dir_path}/**/**"]
-      entries.each do |entry_fullpath|
-        entry_path = entry_fullpath.gsub(dir_path, "")
-        unless File.directory?(entry_fullpath)
-          NightcrawlerSwift.logger.info entry_path
-          upload.execute entry_path, File.open(entry_fullpath, "r")
+    def execute dir_path
+      @logger.info "dir_path: #{dir_path}"
+      Dir["#{dir_path}/**/**"].each do |fullpath|
+        path = fullpath.gsub("#{dir_path}/", "")
+
+        unless File.directory?(fullpath)
+          @logger.info path
+          @upload.execute path, File.open(fullpath, "r")
         end
       end
     end
