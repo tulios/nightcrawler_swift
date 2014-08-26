@@ -26,6 +26,9 @@ module NightcrawlerSwift
       @token_id = @auth_response.access["token"]["id"]
       @admin_url = @auth_response.access["serviceCatalog"].first["endpoints"].first["adminURL"]
       @upload_url = "#{@admin_url}/#{opts.bucket}"
+
+      NightcrawlerSwift.logger.info  "Connected, token_id: #{@token_id}"
+      self
     end
   end
 end

@@ -6,8 +6,7 @@ namespace :nightcrawler_swift do
     desc "Synchronizes the assets"
     task sync: ["assets:precompile", "environment"] do
       raise unless defined?(Rails)
-      path = File.join(Rails.root, "public", Rails.configuration.assets.prefix)
-      NightcrawlerSwift.sync path
+      NightcrawlerSwift.sync File.join(Rails.root, "public")
     end
 
   end

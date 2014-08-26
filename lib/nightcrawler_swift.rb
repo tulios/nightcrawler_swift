@@ -1,30 +1,32 @@
 require "ostruct"
+require "rest_client"
 require "nightcrawler_swift/version"
 require "nightcrawler_swift/connection"
 require "nightcrawler_swift/upload"
+require "nightcrawler_swift/list"
+require "nightcrawler_swift/delete"
+require "nightcrawler_swift/sync"
 
 module NightcrawlerSwift
+  class << self
 
-  def self.configure opts = {}
-    @connection = Connection.new opts
-  end
+    attr_accessor :logger
 
-  def self.sync dir_path
-    @connection.connect!
-
-    service = Upload.new @connection
-
-    entries = Dir["#{path}/**/**"]
-    entries.each do |entry_fullpath|
-      entry_path = entry_fullpath.gsub(path, "")
-      if File.directory?(entry_fullpath)
-        # directory = service.directories.create :key => directory_name, :public => true
-
-      else
-        puts entry_path
-        service.upload entry_path, File.open(entry_fullpath, "r")
-      end
+    def logger
+      @logger || Logger.new(STDOUT)
     end
-  end
 
+    def connection
+      @connection
+    end
+
+    def configure opts = {}
+      @connection = Connection.new opts
+    end
+
+    def sync dir_path
+      Sync.new(@connection.connect!).execute(dir_path)
+    end
+
+  end
 end
