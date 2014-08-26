@@ -12,7 +12,7 @@ describe NightcrawlerSwift::Command do
   end
 
   let(:connection) { double(:connection, token_id: token) }
-  let(:restclient) { double(:restclient, put: response, get: response) }
+  let(:restclient) { double(:restclient, put: response, get: response, delete: response) }
   let(:response) { double(:response) }
 
   let :url do
@@ -40,6 +40,26 @@ describe NightcrawlerSwift::Command do
 
     it "returns RestClient response" do
       expect(get).to eql(response)
+    end
+  end
+
+  describe "#delete" do
+    let :delete do
+      subject.send :delete, url, headers: {content_type: :json}
+    end
+
+    it "uses url to initialize RestClient" do
+      delete
+      expect(RestClient::Resource).to have_received(:new).with(url, verify_ssl: false)
+    end
+
+    it "sends headers with token" do
+      delete
+      expect(restclient).to have_received(:delete).with(content_type: :json, "X-Storage-Token" => token)
+    end
+
+    it "returns RestClient response" do
+      expect(delete).to eql(response)
     end
   end
 

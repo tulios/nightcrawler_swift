@@ -11,7 +11,7 @@ module NightcrawlerSwift
 
     protected
 
-    def get url, params
+    def get url, params = {}
       prepare_params params
       resource = resource_for url
       resource.get(params[:headers])
@@ -21,6 +21,12 @@ module NightcrawlerSwift
       prepare_params params
       resource = resource_for url
       resource.put(params[:body], params[:headers])
+    end
+
+    def delete url, params
+      prepare_params params
+      resource = resource_for url
+      resource.delete(params[:headers])
     end
 
     private
