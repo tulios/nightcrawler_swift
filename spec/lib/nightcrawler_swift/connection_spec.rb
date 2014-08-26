@@ -91,6 +91,11 @@ describe NightcrawlerSwift::Connection do
         expect(subject.upload_url).to eql("#{subject.admin_url}/#{opts[:bucket]}")
       end
 
+      it "stores the public_url" do
+        subject.connect!
+        expect(subject.public_url).to eql(auth_success_json["access"]["serviceCatalog"].first["endpoints"].first["publicURL"])
+      end
+
       it "returns self" do
         expect(subject.connect!).to eql(subject)
       end

@@ -1,6 +1,6 @@
 module NightcrawlerSwift
   class Connection
-    attr_accessor :opts, :auth_response, :token_id, :expires_at, :admin_url, :upload_url
+    attr_accessor :opts, :auth_response, :token_id, :expires_at, :admin_url, :upload_url, :public_url
 
     # Hash with: bucket, tenant_name, username, password, auth_url
     #
@@ -29,6 +29,7 @@ module NightcrawlerSwift
 
       @admin_url = @auth_response.access["serviceCatalog"].first["endpoints"].first["adminURL"]
       @upload_url = "#{@admin_url}/#{opts.bucket}"
+      @public_url = @auth_response.access["serviceCatalog"].first["endpoints"].first["publicURL"]
 
       NightcrawlerSwift.logger.info  "Connected, token_id: #{@token_id}"
       self
