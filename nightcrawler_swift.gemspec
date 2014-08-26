@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["ornelas.tulio@gmail.com", "roberto.tech@gmail.com"]
   spec.summary       = %q{Like the X-Men nightcrawler it teleports your assets to a OpenStack Swift bucket/container}
   spec.description   = spec.summary
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/tulios/nightcrawler_swift"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")

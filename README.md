@@ -1,12 +1,12 @@
-# Nightcrawler::Swift
+# Nightcrawler Swift
 
-TODO: Write a gem description
+Like the X-Men nightcrawler it teleports your assets to a OpenStack Swift bucket/container
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
-    gem 'nightcrawler-swift'
+    gem 'nightcrawler_swift'
 
 And then execute:
 
@@ -14,15 +14,97 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install nightcrawler-swift
+    $ gem install nightcrawler_swift
 
 ## Usage
 
-TODO: Write usage instructions here
+### With Rails
+#### 1) You will need to configure your swift credentials
+
+```ruby
+NightcrawlerSwift.configure({
+  bucket: "rogue",
+  tenant_name: "nightcrawler"
+  username: "my_username1",
+  password: "my_password1",
+  auth_url: "https://auth.url.com:123/v2.0/tokens"
+})
+```
+
+You could create an initializer with this code.
+
+#### 2) Load rake tasks into your Rakefile
+
+```ruby
+require 'nightcrawler_swift'
+load 'nightcrawler_swift/tasks/asset_sync.rake'
+```
+
+#### 3) Profit!
+
+```sh
+rake nightcrawler_swift:rails:asset_sync
+```
+
+It will invoke ```rake assets:precompile``` and will copy your public directory to swift bucket/container.
+
+### Programatically
+
+#### 1) Configure
+
+Repeat the first step of Rails guide
+
+#### 2) Call method sync with the desired directory
+
+```ruby
+NightcrawlerSwift.sync File.expand_path("./my-dir")
+```
+
+## Commands
+
+NightcrawlerSwift packs some useful commands. All commands requires that the gem has already been configured and the connection established.
+
+To Establish the connection, call:
+
+```ruby
+NightcrawlerSwift.connection.connect!
+```
+
+To check if the connection is still valid, call:
+
+```ruby
+NightcrawlerSwift.connection.connected?
+```
+
+To reconnect just call ```NightcrawlerSwift.connection.connect!``` again.
+
+### Upload
+
+```ruby
+upload = NightcrawlerSwift::Upload.new
+upload.execute "my_file_path.txt", File.open("../my_file_fullpath.txt", "r")
+# true / false
+```
+
+### List
+
+```ruby
+list = NightcrawlerSwift::List.new
+list.execute
+# [{"hash": "...", "name": "my_file_path.txt"}, {}, {}, ...]
+```
+
+### Delete
+
+```ruby
+delete = NightcrawlerSwift::Delete.new
+delete.execute "my_file_path.txt"
+# true / false
+```
 
 ## Contributing
 
-1. Fork it ( https://github.com/[my-github-username]/nightcrawler-swift/fork )
+1. Fork it ( https://github.com/tulios/nightcrawler_swift/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
