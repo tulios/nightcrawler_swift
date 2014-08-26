@@ -11,6 +11,12 @@ module NightcrawlerSwift
 
     protected
 
+    def get url, params
+      prepare_params params
+      resource = resource_for url
+      resource.get(params[:headers])
+    end
+
     def put url, params = {}
       prepare_params params
       resource = resource_for url

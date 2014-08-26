@@ -8,13 +8,13 @@ describe NightcrawlerSwift::Upload do
 
   describe "#execute" do
     let(:path) { "file_name" }
-    let(:file) { double(:file, read: 'content') }
+    let(:file) { double(:file, read: "content") }
 
-    let(:connection) do
-      double(:connection, upload_url: 'server-url')
+    let :connection do
+      double :connection, upload_url: "server-url"
     end
 
-    let(:response) do
+    let :response do
       double(:response, code: 201)
     end
 
@@ -34,7 +34,7 @@ describe NightcrawlerSwift::Upload do
 
     it "sends file content as body" do
       execute
-      expect(subject).to have_received(:put).with(anything, body: 'content')
+      expect(subject).to have_received(:put).with(anything, body: "content")
     end
 
     it "sends to upload url with given path" do

@@ -11,6 +11,7 @@ module NightcrawlerSwift
     end
 
     class ConnectionError < BaseError; end
+    class NotFoundError < BaseError; end
 
   end
 end
