@@ -1,6 +1,6 @@
 # Nightcrawler Swift
 
-Like the X-Men nightcrawler it teleports your assets to a OpenStack Swift bucket/container
+Like the X-Men nightcrawler this gem teleports your assets to a OpenStack Swift bucket/container. It was designed to sync your assets with OpenStack Swift and allow some operations with your buckets/containers.
 
 ## Installation
 
@@ -31,7 +31,7 @@ NightcrawlerSwift.configure({
 })
 ```
 
-You could create an initializer with this code.
+_You could create an initializer with this code_
 
 #### 2) Load rake tasks into your Rakefile
 
@@ -62,21 +62,21 @@ NightcrawlerSwift.sync File.expand_path("./my-dir")
 
 ## Commands
 
-NightcrawlerSwift packs some useful commands. All commands requires that the gem has already been configured and the connection established.
+NightcrawlerSwift has some useful built-in commands. All commands require the configuration and a established connection.
 
-To Establish the connection, call:
+To Establish the connection, use:
 
 ```ruby
 NightcrawlerSwift.connection.connect!
 ```
 
-To check if the connection is still valid, call:
+To check if the connection is still valid, use:
 
 ```ruby
 NightcrawlerSwift.connection.connected?
 ```
 
-To reconnect just call ```NightcrawlerSwift.connection.connect!``` again.
+To reconnect just use ```NightcrawlerSwift.connection.connect!``` again.
 
 ### Upload
 
@@ -85,6 +85,16 @@ upload = NightcrawlerSwift::Upload.new
 upload.execute "my_file_path.txt", File.open("../my_file_fullpath.txt", "r")
 # true / false
 ```
+
+### Download
+
+```ruby
+download = NightcrawlerSwift::Download.new
+download.execute "my_file_path.txt"
+# File content
+```
+
+_This download command was not designed to retrieve very large files_
 
 ### List
 
