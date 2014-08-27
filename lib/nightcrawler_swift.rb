@@ -28,6 +28,7 @@ module NightcrawlerSwift
     end
 
     def sync dir_path
+      connection.connect!
       Sync.new.execute(dir_path)
     end
 
