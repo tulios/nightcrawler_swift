@@ -34,7 +34,7 @@ config.nightcrawler_swift.auth_url = "https://auth.url.com:123/v2.0/tokens"
 By default it will use ```Rails.logger``` as logger, to change that use a different logger in configurations, like:
 
 ```ruby
-config.nightcrawler_swift.logger = Logger.new(STDOU)
+config.nightcrawler_swift.logger = Logger.new(STDOUT)
 ```
 
 #### 2) Profit!
