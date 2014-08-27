@@ -11,6 +11,7 @@ require "nightcrawler_swift/download"
 require "nightcrawler_swift/list"
 require "nightcrawler_swift/delete"
 require "nightcrawler_swift/sync"
+require "nightcrawler_swift/railtie" if defined?(Rails)
 
 module NightcrawlerSwift
   class << self

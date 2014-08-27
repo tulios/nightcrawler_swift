@@ -19,7 +19,35 @@ Or install it yourself as:
 ## Usage
 
 ### With Rails
-#### 1) You will need to configure your swift credentials
+#### 1) Configure your swift credentials
+
+_In config/application.rb_ or _config/environments/*.rb_
+
+```ruby
+config.nightcrawler_swift.bucket = "rogue"
+config.nightcrawler_swift.tenent_name = "nightcrawler"
+config.nightcrawler_swift.username = "my_username1"
+config.nightcrawler_swift.password = "my_password1"
+config.nightcrawler_swift.auth_url = "https://auth.url.com:123/v2.0/tokens"
+```
+
+By default it will use ```Rails.logger``` as logger, to change that use a different logger in configurations, like:
+
+```ruby
+config.nightcrawler_swift.logger = Logger.new(STDOU)
+```
+
+#### 2) Profit!
+
+```sh
+rake nightcrawler_swift:rails:asset_sync
+```
+
+It will invoke ```rake assets:precompile``` and will copy your public directory to swift bucket/container.
+
+### Programatically
+
+#### 1) Configure your swift credentials
 
 ```ruby
 NightcrawlerSwift.configure({
@@ -31,30 +59,13 @@ NightcrawlerSwift.configure({
 })
 ```
 
-_You could create an initializer with this code_
-
-#### 2) Load rake tasks into your Rakefile
+By default it will use ```Logger.new(STDOUT)``` as logger, to change that use:
 
 ```ruby
-require 'nightcrawler_swift'
-load 'nightcrawler_swift/tasks/asset_sync.rake'
+NightcrawlerSwift.logger = Logger.new(StringIO.new)
 ```
 
-#### 3) Profit!
-
-```sh
-rake nightcrawler_swift:rails:asset_sync
-```
-
-It will invoke ```rake assets:precompile``` and will copy your public directory to swift bucket/container.
-
-### Programatically
-
-#### 1) Configure
-
-Repeat the first step of Rails guide
-
-#### 2) Call method sync with the desired directory
+#### 2) Use method sync with the desired directory
 
 ```ruby
 NightcrawlerSwift.sync File.expand_path("./my-dir")
@@ -85,6 +96,8 @@ upload = NightcrawlerSwift::Upload.new
 upload.execute "my_file_path.txt", File.open("../my_file_fullpath.txt", "r")
 # true / false
 ```
+
+_This upload command was not designed to send very large files_
 
 ### Download
 
