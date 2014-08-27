@@ -8,7 +8,10 @@ describe NightcrawlerSwift::Upload do
 
   describe "#execute" do
     let(:path) { "file_name" }
-    let(:file) { double(:file, read: "content") }
+    let(:file) do
+      dir = File.expand_path(File.join(File.dirname(__FILE__), "../../fixtures/assets"))
+      File.open(File.join(dir, "css1.css"))
+    end
 
     let :connection do
       double :connection, upload_url: "server-url"
@@ -21,6 +24,7 @@ describe NightcrawlerSwift::Upload do
     before do
       allow(NightcrawlerSwift).to receive(:connection).and_return(connection)
       allow(subject).to receive(:put).and_return(response)
+      allow(file).to receive(:read).and_return("content")
     end
 
     let :execute do
@@ -34,7 +38,12 @@ describe NightcrawlerSwift::Upload do
 
     it "sends file content as body" do
       execute
-      expect(subject).to have_received(:put).with(anything, body: "content")
+      expect(subject).to have_received(:put).with(anything, hash_including(body: "content"))
+    end
+
+    it "sends file content_type as header" do
+      execute
+      expect(subject).to have_received(:put).with(anything, hash_including(headers: { content_type: "text/css"}))
     end
 
     it "sends to upload url with given path" do

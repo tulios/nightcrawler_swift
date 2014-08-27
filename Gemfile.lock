@@ -2,6 +2,7 @@ PATH
   remote: .
   specs:
     nightcrawler_swift (0.2.1)
+      multi_mime (>= 1.0.1)
       rest-client (>= 1.7.0)
 
 GEM
@@ -14,6 +15,7 @@ GEM
     debugger-linecache (1.2.0)
     diff-lcs (1.2.5)
     mime-types (2.3)
+    multi_mime (1.0.1)
     netrc (0.7.7)
     rake (10.3.2)
     rest-client (1.7.2)

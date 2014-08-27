@@ -1,6 +1,7 @@
 require "date"
 require "logger"
 require "ostruct"
+require "multi_mime"
 require "rest_client"
 require "nightcrawler_swift/version"
 require "nightcrawler_swift/exceptions"
