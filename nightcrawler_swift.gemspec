@@ -6,7 +6,7 @@ require 'nightcrawler_swift/version'
 Gem::Specification.new do |spec|
   spec.name          = "nightcrawler_swift"
   spec.version       = NightcrawlerSwift::VERSION
-  spec.authors       = ["tulios", "roberto"]
+  spec.authors       = ["tulios", "robertosoares"]
   spec.email         = ["ornelas.tulio@gmail.com", "roberto.tech@gmail.com"]
   spec.summary       = %q{Like the X-Men nightcrawler this gem teleports your assets to a OpenStack Swift bucket/container}
   spec.description   = spec.summary
