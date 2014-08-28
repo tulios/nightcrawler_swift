@@ -27,7 +27,7 @@ _In config/application.rb_ or _config/environments/*.rb_
 
 ```ruby
 config.nightcrawler_swift.bucket = "rogue"
-config.nightcrawler_swift.tenent_name = "nightcrawler"
+config.nightcrawler_swift.tenant_name = "nightcrawler"
 config.nightcrawler_swift.username = "my_username1"
 config.nightcrawler_swift.password = "my_password1"
 config.nightcrawler_swift.auth_url = "https://auth.url.com:123/v2.0/tokens"
