@@ -1,4 +1,5 @@
 [![Code Climate](https://codeclimate.com/github/tulios/nightcrawler_swift/badges/gpa.svg)](https://codeclimate.com/github/tulios/nightcrawler_swift)
+[![Travis](https://api.travis-ci.org/tulios/nightcrawler_swift.svg?branch=master)](https://travis-ci.org/tulios/nightcrawler_swift)
 
 # Nightcrawler Swift
 
