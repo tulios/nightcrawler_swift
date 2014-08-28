@@ -1,6 +1,6 @@
 [![Code Climate](https://codeclimate.com/github/tulios/nightcrawler_swift/badges/gpa.svg)](https://codeclimate.com/github/tulios/nightcrawler_swift)
 [![Travis](https://api.travis-ci.org/tulios/nightcrawler_swift.svg?branch=master)](https://travis-ci.org/tulios/nightcrawler_swift)
-
+[![Gem Version](https://badge.fury.io/rb/nightcrawler_swift.svg)](http://badge.fury.io/rb/nightcrawler_swift)
 # Nightcrawler Swift
 
 Like the X-Men nightcrawler this gem teleports your assets to a OpenStack Swift bucket/container. It was designed to sync your assets with OpenStack Swift and allow some operations with your buckets/containers.
