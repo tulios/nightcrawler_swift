@@ -1,3 +1,4 @@
+require 'digest'
 require 'spec_helper'
 
 describe NightcrawlerSwift::Upload do
@@ -41,9 +42,10 @@ describe NightcrawlerSwift::Upload do
       expect(subject).to have_received(:put).with(anything, hash_including(body: "content"))
     end
 
-    it "sends file content_type as header" do
+    it "sends file metadata as headers" do
       execute
-      expect(subject).to have_received(:put).with(anything, hash_including(headers: { content_type: "text/css"}))
+      etag = '"%s"' % Digest::MD5.new.update(file.read).hexdigest
+      expect(subject).to have_received(:put).with(anything, hash_including(headers: { content_type: "text/css", etag: etag}))
     end
 
     it "sends to upload url with given path" do
