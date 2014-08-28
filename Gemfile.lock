@@ -1,9 +1,9 @@
 PATH
   remote: .
   specs:
-    nightcrawler_swift (0.2.2)
+    nightcrawler_swift (0.2.3)
       multi_mime (>= 1.0.1)
-      rest-client (>= 1.7.0)
+      rest-client
 
 GEM
   remote: https://rubygems.org/
