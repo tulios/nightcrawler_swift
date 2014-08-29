@@ -15,11 +15,19 @@ describe NightcrawlerSwift::Upload do
     end
 
     let :connection do
-      double :connection, upload_url: "server-url"
+      double :connection, upload_url: "server-url", opts: OpenStruct.new {}
     end
 
     let :response do
       double(:response, code: 201)
+    end
+
+    let :etag do
+      '"%s"' % Digest::MD5.new.update(file.read).hexdigest
+    end
+
+    let :max_age do
+      31536000
     end
 
     before do
@@ -44,13 +52,18 @@ describe NightcrawlerSwift::Upload do
 
     it "sends file metadata as headers" do
       execute
-      etag = '"%s"' % Digest::MD5.new.update(file.read).hexdigest
       expect(subject).to have_received(:put).with(anything, hash_including(headers: { content_type: "text/css", etag: etag}))
     end
 
     it "sends to upload url with given path" do
       execute
       expect(subject).to have_received(:put).with("server-url/file_name", anything)
+    end
+
+    it "sends max_age into headers" do
+      connection.opts.max_age = max_age
+      execute
+      expect(subject).to have_received(:put).with(anything, hash_including(headers: { content_type: "text/css", etag: etag, cache_control: "max-age=#{max_age}" }))
     end
 
     context "when response code is 200" do

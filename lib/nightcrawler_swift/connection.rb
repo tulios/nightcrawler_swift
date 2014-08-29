@@ -6,6 +6,7 @@ module NightcrawlerSwift
     #
     def initialize opts = {}
       @opts = OpenStruct.new opts
+      raise NightcrawlerSwift::Exceptions::ConfigurationError.new "max_age should be an Integer" if @opts.max_age and not @opts.max_age.is_a? Numeric
     end
 
     def connect!

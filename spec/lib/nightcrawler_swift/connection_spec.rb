@@ -8,7 +8,8 @@ describe NightcrawlerSwift::Connection do
       tenant_name: "tenant_username1",
       username: "username1",
       password: "some-pass",
-      auth_url: "https://auth.url.com:123/v2.0/tokens"
+      auth_url: "https://auth.url.com:123/v2.0/tokens",
+      max_age: 31536000 #1 year
     }
   end
 
@@ -88,6 +89,16 @@ describe NightcrawlerSwift::Connection do
 
       it "returns self" do
         expect(subject.connect!).to eql(subject)
+      end
+
+      context "max_age" do
+        it "stores it" do
+          expect(subject.opts.max_age).to eql(opts[:max_age])
+        end
+
+        it "should be an integer" do
+          expect { NightcrawlerSwift::Connection.new({max_age: "a string"}) }.to raise_error(NightcrawlerSwift::Exceptions::ConfigurationError)
+        end
       end
     end
 
