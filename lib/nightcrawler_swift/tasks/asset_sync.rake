@@ -8,6 +8,7 @@ namespace :nightcrawler_swift do
       begin
         NightcrawlerSwift.sync File.join(Rails.root, "public")
       rescue => e
+        STDERR.puts e.message
         exit 1
       end
     end

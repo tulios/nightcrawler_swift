@@ -42,6 +42,7 @@ describe "asset_sync.rake" do
 
     context "when occurs an error" do
       it "exits with code 1" do
+        allow(STDERR).to receive(:puts)
         allow(NightcrawlerSwift).to receive(:sync).and_raise(StandardError.new)
         code = "wrong code"
 
