@@ -5,8 +5,11 @@ namespace :nightcrawler_swift do
 
     desc "Synchronizes the public directory with OpenStack Swift"
     task asset_sync: ["assets:precompile", "environment"] do
-      raise unless defined?(Rails)
-      NightcrawlerSwift.sync File.join(Rails.root, "public")
+      begin
+        NightcrawlerSwift.sync File.join(Rails.root, "public")
+      rescue => e
+        exit 1
+      end
     end
 
   end

@@ -1,3 +1,4 @@
+require "rake"
 require "byebug"
 require "nightcrawler_swift"
 
