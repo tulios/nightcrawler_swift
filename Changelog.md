@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.0
+
+  - Included ```Cache-Control``` header to upload command through max_age configuration parameter
+  - Sending etag when uploading assets
+  - Bugfix: rake task now returns exit code 1 when error
+
 ## 0.2.3
 
   - Removed rest-client version due to compatibility issues
