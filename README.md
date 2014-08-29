@@ -22,7 +22,7 @@ Or install it yourself as:
 ## Usage
 
 ### With Rails
-#### 1) Configure your swift credentials
+#### 1) Configure your swift credentials and options
 
 _In config/application.rb_ or _config/environments/*.rb_
 
@@ -32,7 +32,9 @@ config.nightcrawler_swift.tenant_name = "nightcrawler"
 config.nightcrawler_swift.username = "my_username1"
 config.nightcrawler_swift.password = "my_password1"
 config.nightcrawler_swift.auth_url = "https://auth.url.com:123/v2.0/tokens"
+config.nightcrawler_swift.max_age = 3600 #optional
 ```
+**max_age** will be used to define *Cache-Control:max-age=<value>* header. It's not required.
 
 By default it will use ```Rails.logger``` as logger, to change that use a different logger in configurations, like:
 
@@ -50,7 +52,7 @@ It will invoke ```rake assets:precompile``` and will copy your public directory 
 
 ### Programatically
 
-#### 1) Configure your swift credentials
+#### 1) Configure your swift credentials and options
 
 ```ruby
 NightcrawlerSwift.configure({
@@ -58,7 +60,8 @@ NightcrawlerSwift.configure({
   tenant_name: "nightcrawler"
   username: "my_username1",
   password: "my_password1",
-  auth_url: "https://auth.url.com:123/v2.0/tokens"
+  auth_url: "https://auth.url.com:123/v2.0/tokens",
+  max_age: 3600 #optional
 })
 ```
 
