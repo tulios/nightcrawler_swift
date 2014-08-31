@@ -1,26 +1,23 @@
 module NightcrawlerSwift
   class Connection
-    attr_accessor :opts, :auth_response, :token_id, :expires_at, :admin_url, :upload_url, :public_url
+    attr_reader :auth_response, :token_id, :expires_at, :catalog, :admin_url, :upload_url, :public_url
+    attr_accessor :opts
 
     # Hash with: bucket, tenant_name, username, password, auth_url
     #
     def initialize opts = {}
       @opts = OpenStruct.new opts
-      raise NightcrawlerSwift::Exceptions::ConfigurationError.new "max_age should be an Integer" if @opts.max_age and not @opts.max_age.is_a? Numeric
+      raise Exceptions::ConfigurationError.new "max_age should be an Integer" if @opts.max_age and not @opts.max_age.is_a? Numeric
     end
 
     def connect!
-      auth_response = authenticate!
+      authenticate!
+      select_token
+      select_catalog
+      select_endpoints
+      configure_urls
 
-      @token_id = auth_response.access["token"]["id"]
-      @expires_at = auth_response.access["token"]["expires"]
-      @expires_at = DateTime.parse(@expires_at).to_time
-
-      @admin_url = auth_response.access["serviceCatalog"].first["endpoints"].first["adminURL"]
-      @upload_url = "#{@admin_url}/#{opts.bucket}"
-      @public_url = auth_response.access["serviceCatalog"].first["endpoints"].first["publicURL"]
-
-      NightcrawlerSwift.logger.info  "Connected, token_id: #{@token_id}"
+      NightcrawlerSwift.logger.info  "Connected, token_id: #{token_id}"
       self
     end
 
@@ -42,9 +39,31 @@ module NightcrawlerSwift
         accept: :json,
       )
 
-      OpenStruct.new(JSON.parse(response.body))
+      @auth_response = OpenStruct.new(JSON.parse(response.body))
     rescue StandardError => e
       raise Exceptions::ConnectionError.new(e)
+    end
+
+    def select_token
+      @token_id = auth_response.access["token"]["id"]
+      @expires_at = auth_response.access["token"]["expires"]
+      @expires_at = DateTime.parse(@expires_at).to_time
+    end
+
+    def select_catalog
+      catalogs = auth_response.access["serviceCatalog"]
+      @catalog = catalogs.find {|catalog| catalog["type"] == "object-store"}
+    end
+
+    def select_endpoints
+      raise Exceptions::ConfigurationError.new "No catalog of type 'object-store' found" if catalog.nil?
+      @endpoints = catalog["endpoints"].first
+    end
+
+    def configure_urls
+      @admin_url = @endpoints["adminURL"]
+      @upload_url = "#{@admin_url}/#{opts.bucket}"
+      @public_url = @endpoints["publicURL"]
     end
   end
 end

@@ -32,7 +32,7 @@ config.nightcrawler_swift.tenant_name = "nightcrawler"
 config.nightcrawler_swift.username = "my_username1"
 config.nightcrawler_swift.password = "my_password1"
 config.nightcrawler_swift.auth_url = "https://auth.url.com:123/v2.0/tokens"
-config.nightcrawler_swift.max_age = 3600 #optional
+config.nightcrawler_swift.max_age = 3600 # optional
 ```
 **max_age** will be used to define *Cache-Control:max-age=<value>* header. It's not required.
 
@@ -61,7 +61,7 @@ NightcrawlerSwift.configure({
   username: "my_username1",
   password: "my_password1",
   auth_url: "https://auth.url.com:123/v2.0/tokens",
-  max_age: 3600 #optional
+  max_age: 3600 # optional
 })
 ```
 

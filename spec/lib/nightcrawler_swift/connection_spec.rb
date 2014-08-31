@@ -9,7 +9,7 @@ describe NightcrawlerSwift::Connection do
       username: "username1",
       password: "some-pass",
       auth_url: "https://auth.url.com:123/v2.0/tokens",
-      max_age: 31536000 #1 year
+      max_age: 31536000 # 1 year
     }
   end
 
@@ -31,6 +31,20 @@ describe NightcrawlerSwift::Connection do
       expect(subject.opts).to_not be_nil
       opts.keys.each do |key|
         expect(subject.opts.send(key)).to eql(opts[key])
+      end
+    end
+
+    it "stores the max_age" do
+      expect(subject.opts.max_age).to eql(opts[:max_age])
+    end
+
+    context "and max_age isn't an integer" do
+      subject do
+        NightcrawlerSwift::Connection.new(max_age: "a string")
+      end
+
+      it "raises NightcrawlerSwift::Exceptions::ConfigurationError" do
+        expect { subject }.to raise_error(NightcrawlerSwift::Exceptions::ConfigurationError)
       end
     end
   end
@@ -61,6 +75,11 @@ describe NightcrawlerSwift::Connection do
           and_return(auth_success_response)
       end
 
+      it "stores the auth_response" do
+        subject.connect!
+        expect(subject.auth_response).to eql(OpenStruct.new(auth_success_json))
+      end
+
       it "stores the token id" do
         subject.connect!
         expect(subject.token_id).to eql(auth_success_json["access"]["token"]["id"])
@@ -70,6 +89,11 @@ describe NightcrawlerSwift::Connection do
         subject.connect!
         expires_at = DateTime.parse(auth_success_json["access"]["token"]["expires"]).to_time
         expect(subject.expires_at).to eql(expires_at)
+      end
+
+      it "stores the catalog" do
+        subject.connect!
+        expect(subject.catalog).to eql(auth_success_json["access"]["serviceCatalog"][0])
       end
 
       it "stores the admin_url" do
@@ -91,18 +115,19 @@ describe NightcrawlerSwift::Connection do
         expect(subject.connect!).to eql(subject)
       end
 
-      context "max_age" do
-        it "stores it" do
-          expect(subject.opts.max_age).to eql(opts[:max_age])
+      context "and there isn't any catalog configured" do
+        before do
+          auth_success_json["access"]["serviceCatalog"] = []
+          allow(subject).to receive(:auth_response).and_return(OpenStruct.new(auth_success_json))
         end
 
-        it "should be an integer" do
-          expect { NightcrawlerSwift::Connection.new({max_age: "a string"}) }.to raise_error(NightcrawlerSwift::Exceptions::ConfigurationError)
+        it "raises NightcrawlerSwift::Exceptions::ConfigurationError" do
+          expect { subject.connect! }.to raise_error(NightcrawlerSwift::Exceptions::ConfigurationError)
         end
       end
     end
 
-    describe "when some error happens" do
+    describe "when some error happens with the connection" do
       before do
         allow(RestClient).to receive(:post).
           with(opts[:auth_url], auth_json, content_type: :json, accept: :json).
