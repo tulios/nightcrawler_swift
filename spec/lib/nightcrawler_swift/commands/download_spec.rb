@@ -2,21 +2,28 @@ require 'spec_helper'
 
 describe NightcrawlerSwift::Download do
 
+  let(:connection) { NightcrawlerSwift::Connection.new }
+  let(:token) { "token" }
+  let(:expires_at) { (DateTime.now + 60).to_time }
+  let(:public_url) { "server-url" }
+
   subject do
     NightcrawlerSwift::Download.new
   end
 
-  describe "#execute" do
-    let :connection do
-      double :connection, public_url: "server-url"
-    end
+  before do
+    allow(NightcrawlerSwift).to receive(:connection).and_return(connection)
+    allow(connection).to receive(:token_id).and_return(token)
+    allow(connection).to receive(:expires_at).and_return(expires_at)
+    allow(connection).to receive(:public_url).and_return(public_url)
+  end
 
+  describe "#execute" do
     let :execute do
       subject.execute "file_path"
     end
 
     before do
-      allow(NightcrawlerSwift).to receive(:connection).and_return(connection)
       allow(subject).to receive(:get).and_return(response)
     end
 

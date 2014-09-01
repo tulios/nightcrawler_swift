@@ -9,7 +9,7 @@ module NightcrawlerSwift
       select_endpoints
       configure_urls
 
-      NightcrawlerSwift.logger.info  "Connected, token_id: #{token_id}"
+      NightcrawlerSwift.logger.info  "[NightcrawlerSwift] Connected, token_id: #{token_id}"
       self
     end
 

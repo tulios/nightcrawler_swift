@@ -3,12 +3,21 @@ require 'spec_helper'
 
 describe NightcrawlerSwift::Upload do
 
+  let(:connection) { NightcrawlerSwift::Connection.new }
+  let(:token) { "token" }
+  let(:expires_at) { (DateTime.now + 60).to_time }
+  let(:upload_url) { "server-url" }
+
   subject do
     NightcrawlerSwift::Upload.new
   end
 
   before do
     NightcrawlerSwift.configure
+    allow(NightcrawlerSwift).to receive(:connection).and_return(connection)
+    allow(connection).to receive(:token_id).and_return(token)
+    allow(connection).to receive(:expires_at).and_return(expires_at)
+    allow(connection).to receive(:upload_url).and_return(upload_url)
   end
 
   describe "#execute" do
@@ -16,10 +25,6 @@ describe NightcrawlerSwift::Upload do
     let(:file) do
       dir = File.expand_path(File.join(File.dirname(__FILE__), "../../../fixtures/assets"))
       File.open(File.join(dir, "css1.css"))
-    end
-
-    let :connection do
-      double :connection, upload_url: "server-url"
     end
 
     let :response do
@@ -35,7 +40,6 @@ describe NightcrawlerSwift::Upload do
     end
 
     before do
-      allow(NightcrawlerSwift).to receive(:connection).and_return(connection)
       allow(subject).to receive(:put).and_return(response)
       allow(file).to receive(:read).and_return("content")
     end

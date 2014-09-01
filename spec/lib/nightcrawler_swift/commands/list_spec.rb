@@ -2,19 +2,23 @@ require "spec_helper"
 
 describe NightcrawlerSwift::List do
 
+  let(:connection) { NightcrawlerSwift::Connection.new }
+  let(:token) { "token" }
+  let(:expires_at) { (DateTime.now + 60).to_time }
+  let(:upload_url) { "server-url" }
+
   subject do
     NightcrawlerSwift::List.new
   end
 
+  before do
+    allow(NightcrawlerSwift).to receive(:connection).and_return(connection)
+    allow(connection).to receive(:token_id).and_return(token)
+    allow(connection).to receive(:expires_at).and_return(expires_at)
+    allow(connection).to receive(:upload_url).and_return(upload_url)
+  end
+
   describe "#execute" do
-    let :connection do
-      double :connection, upload_url: "server-url"
-    end
-
-    before do
-      allow(NightcrawlerSwift).to receive(:connection).and_return(connection)
-    end
-
     context "success" do
       let :json_response do
         [{"name" => "file"}]

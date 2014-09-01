@@ -7,16 +7,19 @@ describe NightcrawlerSwift::Command do
   end
 
   before do
-    allow(NightcrawlerSwift).to receive(:connection).and_return(connection)
-    allow(RestClient::Resource).to receive(:new).and_return(restclient)
     NightcrawlerSwift.configure
+    allow(NightcrawlerSwift).to receive(:connection).and_return(connection)
+    allow(connection).to receive(:token_id).and_return(token)
+    allow(connection).to receive(:expires_at).and_return(expires_at)
+    allow(RestClient::Resource).to receive(:new).and_return(restclient)
   end
 
-  let(:connection) { double(:connection, token_id: token) }
+  let(:connection) { NightcrawlerSwift::Connection.new }
   let(:restclient) { double(:restclient, put: response, get: response, delete: response) }
   let(:response) { double(:response) }
   let(:url) { "http://url.com" }
   let(:token) { "token" }
+  let(:expires_at) { (DateTime.now + 60).to_time }
 
   shared_examples "resource configured with NightcrawlerSwift.options" do
     it "uses the configured verify_ssl" do
@@ -29,6 +32,36 @@ describe NightcrawlerSwift::Command do
       NightcrawlerSwift.configure timeout: 10
       execute_http
       expect(RestClient::Resource).to have_received(:new).with(url, hash_including(timeout: 10))
+    end
+  end
+
+  describe "#connection" do
+    context "when disconnected" do
+      before do
+        allow(NightcrawlerSwift.connection).to receive(:connected?).and_return(false)
+      end
+
+      it "connects and then return the connection" do
+        expect(NightcrawlerSwift.connection).to receive(:connect!)
+        expect(subject.connection).to eql(connection)
+      end
+    end
+
+    context "when connected" do
+      before do
+        allow(NightcrawlerSwift.connection).to receive(:connected?).and_return(true)
+      end
+
+      it "returns the connection" do
+        expect(NightcrawlerSwift.connection).to_not receive(:connect!)
+        expect(subject.connection).to eql(connection)
+      end
+    end
+  end
+
+  describe "#options" do
+    it "returns NightcrawlerSwift.options" do
+      expect(subject.options).to eql(NightcrawlerSwift.options)
     end
   end
 

@@ -94,21 +94,7 @@ NightcrawlerSwift.sync File.expand_path("./my-dir")
 
 ## Commands
 
-NightcrawlerSwift has some useful built-in commands. All commands require the configuration and a established connection.
-
-To Establish the connection, use:
-
-```ruby
-NightcrawlerSwift.connection.connect!
-```
-
-To check if the connection is still valid, use:
-
-```ruby
-NightcrawlerSwift.connection.connected?
-```
-
-To reconnect just use ```NightcrawlerSwift.connection.connect!``` again.
+NightcrawlerSwift has some useful built-in commands. All commands require the configuration and will __automatically__ connect/reconnect to keystone when necessary.
 
 ### Upload
 
@@ -145,6 +131,23 @@ delete = NightcrawlerSwift::Delete.new
 delete.execute "my_file_path.txt"
 # true / false
 ```
+
+## Connection
+
+To manually establish the connection with keystone, use:
+
+```ruby
+NightcrawlerSwift.connection.connect!
+```
+
+To check if the connection is still valid, use:
+
+```ruby
+NightcrawlerSwift.connection.connected?
+```
+
+To reconnect just use ```NightcrawlerSwift.connection.connect!``` again.
+
 
 ## Contributing
 

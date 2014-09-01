@@ -2,7 +2,9 @@ module NightcrawlerSwift
   class Command
 
     def connection
-      NightcrawlerSwift.connection
+      NightcrawlerSwift.connection.tap do |conn|
+        conn.connect! unless conn.connected?
+      end
     end
 
     def options

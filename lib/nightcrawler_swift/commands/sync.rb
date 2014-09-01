@@ -7,12 +7,12 @@ module NightcrawlerSwift
     end
 
     def execute dir_path
-      @logger.info "dir_path: #{dir_path}"
+      @logger.info "[NightcrawlerSwift] dir_path: #{dir_path}"
       Dir["#{dir_path}/**/**"].each do |fullpath|
         path = fullpath.gsub("#{dir_path}/", "")
 
         unless File.directory?(fullpath)
-          @logger.info path
+          @logger.info "[NightcrawlerSwift] #{path}"
           @upload.execute path, File.open(fullpath, "r")
         end
       end

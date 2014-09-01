@@ -89,14 +89,7 @@ describe NightcrawlerSwift do
       NightcrawlerSwift.configure
     end
 
-    it "connects" do
-      allow(NightcrawlerSwift::Sync).to receive(:new).and_return(sync_instance)
-      expect(NightcrawlerSwift.connection).to receive(:connect!)
-      NightcrawlerSwift.sync dir_path
-    end
-
     it "uses Sync command with the given dir_path" do
-      expect(NightcrawlerSwift.connection).to receive(:connect!)
       expect(NightcrawlerSwift::Sync).to receive(:new).and_return(sync_instance)
       expect(sync_instance).to receive(:execute).with(dir_path)
       NightcrawlerSwift.sync dir_path
