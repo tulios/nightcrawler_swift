@@ -22,8 +22,8 @@ describe "asset_sync.rake" do
     Rake::Task.define_task("assets:precompile")
   end
 
-  describe "nightcrawler_swift:rails:asset_sync" do
-    let(:task_name) { "nightcrawler_swift:rails:asset_sync" }
+  describe "nightcrawler_swift:rails:sync" do
+    let(:task_name) { "nightcrawler_swift:rails:sync" }
     subject { rake[task_name] }
 
     before do
@@ -32,7 +32,6 @@ describe "asset_sync.rake" do
 
     it "requires environment and assets:precompile" do
       expect(subject.prerequisites).to include "environment"
-      expect(subject.prerequisites).to include "assets:precompile"
     end
 
     it "calls sync with Rails public dir path" do
@@ -54,6 +53,23 @@ describe "asset_sync.rake" do
 
         expect(code).to eql(1)
       end
+    end
+  end
+
+  describe "nightcrawler_swift:rails:asset_sync" do
+    let(:task_name) { "nightcrawler_swift:rails:asset_sync" }
+    subject { rake[task_name] }
+
+    it "calls 'assets:precompile' and 'nightcrawler_swift:rails:sync'" do
+      task1 = double("task1", invoke: true)
+      task2 = double("task2", invoke: true)
+
+      expect(Rake::Task).to receive(:[]).with("assets:precompile").and_return(task1)
+      expect(Rake::Task).to receive(:[]).with("nightcrawler_swift:rails:sync").and_return(task2)
+      expect(task1).to receive(:invoke)
+      expect(task2).to receive(:invoke)
+
+      subject.invoke
     end
   end
 end
