@@ -33,6 +33,7 @@ module NightcrawlerSwift
     #
     # - max_age (optional, default: nil)
     # - verify_ssl (optional, default: false)
+    # - timeout (in seconds. Optional, default: nil)
     #
     def configure opts = {}
       @options = OpenStruct.new({verify_ssl: false}.merge(opts))

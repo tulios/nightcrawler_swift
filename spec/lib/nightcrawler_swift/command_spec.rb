@@ -15,13 +15,21 @@ describe NightcrawlerSwift::Command do
   let(:connection) { double(:connection, token_id: token) }
   let(:restclient) { double(:restclient, put: response, get: response, delete: response) }
   let(:response) { double(:response) }
+  let(:url) { "http://url.com" }
+  let(:token) { "token" }
 
-  let :url do
-    "http://url.com"
-  end
+  shared_examples "resource configured with NightcrawlerSwift.options" do
+    it "uses the configured verify_ssl" do
+      NightcrawlerSwift.configure verify_ssl: true
+      execute_http
+      expect(RestClient::Resource).to have_received(:new).with(url, hash_including(verify_ssl: true))
+    end
 
-  let :token do
-    "token"
+    it "uses the configured timeout" do
+      NightcrawlerSwift.configure timeout: 10
+      execute_http
+      expect(RestClient::Resource).to have_received(:new).with(url, hash_including(timeout: 10))
+    end
   end
 
   describe "#get" do
@@ -29,10 +37,8 @@ describe NightcrawlerSwift::Command do
       subject.send :get, url, headers: {content_type: :json}
     end
 
-    it "uses url to initialize RestClient" do
-      get
-      expect(RestClient::Resource).to have_received(:new).with(url, verify_ssl: false)
-    end
+    let(:execute_http) { get }
+    it_behaves_like "resource configured with NightcrawlerSwift.options"
 
     it "sends headers with token" do
       get
@@ -49,10 +55,8 @@ describe NightcrawlerSwift::Command do
       subject.send :delete, url, headers: {content_type: :json}
     end
 
-    it "uses url to initialize RestClient" do
-      delete
-      expect(RestClient::Resource).to have_received(:new).with(url, verify_ssl: false)
-    end
+    let(:execute_http) { delete }
+    it_behaves_like "resource configured with NightcrawlerSwift.options"
 
     it "sends headers with token" do
       delete
@@ -68,6 +72,9 @@ describe NightcrawlerSwift::Command do
     let :put do
       subject.send(:put, url, body: 'content', headers: {a: 1})
     end
+
+    let(:execute_http) { put }
+    it_behaves_like "resource configured with NightcrawlerSwift.options"
 
     it "returns RestClient response" do
       expect(put).to eql(response)
@@ -85,7 +92,7 @@ describe NightcrawlerSwift::Command do
 
     it "uses url to initialize RestClient" do
       put
-      expect(RestClient::Resource).to have_received(:new).with(url, verify_ssl: false)
+      expect(RestClient::Resource).to have_received(:new).with(url, verify_ssl: false, timeout: nil)
     end
   end
 

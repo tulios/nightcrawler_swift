@@ -36,7 +36,11 @@ module NightcrawlerSwift
     private
 
     def resource_for url
-      RestClient::Resource.new url, verify_ssl: options.verify_ssl
+      RestClient::Resource.new(
+        url,
+        verify_ssl: options.verify_ssl,
+        timeout: options.timeout
+      )
     end
 
     def prepare_params params

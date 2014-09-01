@@ -39,6 +39,7 @@ __Optional configurations:__
 ```ruby
 config.nightcrawler_swift.max_age = 3600 # default: nil
 config.nightcrawler_swift.verify_ssl = true # default: false
+config.nightcrawler_swift.timeout = 10 # in seconds, default: nil
 ```
 
 _max_age_ will be used to define *Cache-Control:max-age=<value>* header.
@@ -75,7 +76,8 @@ __Optional configurations:__
 
 ```ruby
 max_age: 3600,
-verify_ssl: true
+verify_ssl: true,
+timeout: 10
 ```
 
 By default it will use ```Logger.new(STDOUT)``` as logger, to change that use:
