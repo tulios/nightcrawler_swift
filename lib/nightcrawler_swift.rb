@@ -7,11 +7,11 @@ require "nightcrawler_swift/version"
 require "nightcrawler_swift/exceptions"
 require "nightcrawler_swift/command"
 require "nightcrawler_swift/connection"
-require "nightcrawler_swift/upload"
-require "nightcrawler_swift/download"
-require "nightcrawler_swift/list"
-require "nightcrawler_swift/delete"
-require "nightcrawler_swift/sync"
+require "nightcrawler_swift/commands/upload"
+require "nightcrawler_swift/commands/download"
+require "nightcrawler_swift/commands/list"
+require "nightcrawler_swift/commands/delete"
+require "nightcrawler_swift/commands/sync"
 require "nightcrawler_swift/railtie" if defined?(Rails)
 
 module NightcrawlerSwift

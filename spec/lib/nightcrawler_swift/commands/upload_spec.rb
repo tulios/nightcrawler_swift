@@ -14,7 +14,7 @@ describe NightcrawlerSwift::Upload do
   describe "#execute" do
     let(:path) { "file_name" }
     let(:file) do
-      dir = File.expand_path(File.join(File.dirname(__FILE__), "../../fixtures/assets"))
+      dir = File.expand_path(File.join(File.dirname(__FILE__), "../../../fixtures/assets"))
       File.open(File.join(dir, "css1.css"))
     end
 

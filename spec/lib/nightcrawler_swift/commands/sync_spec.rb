@@ -17,7 +17,7 @@ describe NightcrawlerSwift::Sync do
     end
 
     it "executes upload command for each file of a directory" do
-      dir = File.expand_path(File.join(File.dirname(__FILE__), "../../fixtures/assets"))
+      dir = File.expand_path(File.join(File.dirname(__FILE__), "../../../fixtures/assets"))
 
       subject.instance_variable_set(:@upload, upload)
       expect(File).to receive(:open).with(File.join(dir, "css1.css"), "r").and_call_original
