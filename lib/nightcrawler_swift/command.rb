@@ -5,6 +5,10 @@ module NightcrawlerSwift
       NightcrawlerSwift.connection
     end
 
+    def options
+      NightcrawlerSwift.options
+    end
+
     def execute
       raise NotImplemented.new
     end

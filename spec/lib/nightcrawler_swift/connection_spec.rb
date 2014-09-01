@@ -19,34 +19,12 @@ describe NightcrawlerSwift::Connection do
   end
 
   subject do
-    NightcrawlerSwift::Connection.new opts
+    NightcrawlerSwift::Connection.new
   end
 
   before do
+    NightcrawlerSwift.configure opts
     NightcrawlerSwift.logger = Logger.new(StringIO.new)
-  end
-
-  describe "initialization" do
-    it "creates the opts struct with the given values" do
-      expect(subject.opts).to_not be_nil
-      opts.keys.each do |key|
-        expect(subject.opts.send(key)).to eql(opts[key])
-      end
-    end
-
-    it "stores the max_age" do
-      expect(subject.opts.max_age).to eql(opts[:max_age])
-    end
-
-    context "and max_age isn't an integer" do
-      subject do
-        NightcrawlerSwift::Connection.new(max_age: "a string")
-      end
-
-      it "raises NightcrawlerSwift::Exceptions::ConfigurationError" do
-        expect { subject }.to raise_error(NightcrawlerSwift::Exceptions::ConfigurationError)
-      end
-    end
   end
 
   describe "#connect!" do

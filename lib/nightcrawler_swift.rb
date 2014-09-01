@@ -18,14 +18,28 @@ module NightcrawlerSwift
   class << self
 
     attr_accessor :logger
-    attr_reader :connection
+    attr_reader :options, :connection
 
     def logger
       @logger || Logger.new(STDOUT)
     end
 
+    # Hash with:
+    # - bucket
+    # - tenant_name
+    # - username
+    # - password
+    # - auth_url
+    # - max_age (optional)
+    #
     def configure opts = {}
-      @connection = Connection.new opts
+      @options = OpenStruct.new opts
+
+      if @options.max_age and not @options.max_age.is_a?(Numeric)
+        raise Exceptions::ConfigurationError.new "max_age should be an Integer"
+      end
+
+      @connection = Connection.new
     end
 
     def sync dir_path

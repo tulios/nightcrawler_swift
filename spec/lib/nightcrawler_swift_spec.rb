@@ -2,6 +2,9 @@ require "spec_helper"
 
 describe NightcrawlerSwift do
 
+  let(:opts) { {bucket: "rogue"} }
+  let(:options) { OpenStruct.new(opts) }
+
   subject do
     NightcrawlerSwift
   end
@@ -24,20 +27,46 @@ describe NightcrawlerSwift do
   end
 
   describe "::configure" do
-    it "creates a new connection with the given opts" do
-      opts = {bucket: "rogue"}
-      expect(NightcrawlerSwift::Connection).to receive(:new).with(opts).and_call_original
+    it "creates the options struct with the given values" do
+      subject.configure opts
+      expect(subject.options).to_not be_nil
+      opts.keys.each do |key|
+        expect(subject.options.send(key)).to eql(opts[key])
+      end
+    end
+
+    it "creates a new connection" do
+      expect(NightcrawlerSwift::Connection).to receive(:new).and_call_original
       subject.configure opts
       expect(subject.connection).to_not be_nil
+    end
+
+    context "and max_age isn't an integer" do
+      let(:opts) { {max_age: "a string"} }
+
+      it "raises NightcrawlerSwift::Exceptions::ConfigurationError" do
+        expect { subject.configure(opts) }.to raise_error(NightcrawlerSwift::Exceptions::ConfigurationError)
+      end
     end
   end
 
   describe "::connection" do
     it "returns the configured connection" do
       connection = NightcrawlerSwift::Connection.new
-      expect(NightcrawlerSwift::Connection).to receive(:new).with(anything).and_return(connection)
-      NightcrawlerSwift.configure
+      expect(NightcrawlerSwift::Connection).to receive(:new).and_return(connection)
+      NightcrawlerSwift.configure opts
       expect(NightcrawlerSwift.connection).to eql(connection)
+    end
+  end
+
+  describe "::options" do
+    before do
+      allow(NightcrawlerSwift::Connection).to receive(:new)
+    end
+
+    it "returns the given options" do
+      NightcrawlerSwift.configure(opts)
+      expect(NightcrawlerSwift.options).to eql(OpenStruct.new(opts))
     end
   end
 

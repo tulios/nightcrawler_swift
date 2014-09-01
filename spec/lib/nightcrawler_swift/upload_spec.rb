@@ -7,6 +7,10 @@ describe NightcrawlerSwift::Upload do
     NightcrawlerSwift::Upload.new
   end
 
+  before do
+    NightcrawlerSwift.configure {}
+  end
+
   describe "#execute" do
     let(:path) { "file_name" }
     let(:file) do
@@ -15,7 +19,7 @@ describe NightcrawlerSwift::Upload do
     end
 
     let :connection do
-      double :connection, upload_url: "server-url", opts: OpenStruct.new {}
+      double :connection, upload_url: "server-url"
     end
 
     let :response do
@@ -61,7 +65,7 @@ describe NightcrawlerSwift::Upload do
     end
 
     it "sends max_age into headers" do
-      connection.opts.max_age = max_age
+      NightcrawlerSwift.configure max_age: max_age
       execute
       expect(subject).to have_received(:put).with(anything, hash_including(headers: { content_type: "text/css", etag: etag, cache_control: "max-age=#{max_age}" }))
     end

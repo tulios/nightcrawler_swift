@@ -1,14 +1,6 @@
 module NightcrawlerSwift
   class Connection
     attr_reader :auth_response, :token_id, :expires_at, :catalog, :admin_url, :upload_url, :public_url
-    attr_accessor :opts
-
-    # Hash with: bucket, tenant_name, username, password, auth_url
-    #
-    def initialize opts = {}
-      @opts = OpenStruct.new opts
-      raise Exceptions::ConfigurationError.new "max_age should be an Integer" if @opts.max_age and not @opts.max_age.is_a? Numeric
-    end
 
     def connect!
       authenticate!
@@ -26,6 +18,9 @@ module NightcrawlerSwift
     end
 
     private
+    def opts
+      NightcrawlerSwift.options
+    end
 
     def authenticate!
       auth_options = {
