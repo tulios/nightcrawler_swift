@@ -41,6 +41,12 @@ describe NightcrawlerSwift do
       expect(subject.connection).to_not be_nil
     end
 
+    context "verify_ssl" do
+      it "defauts to false" do
+        expect(subject.options.verify_ssl).to eql false
+      end
+    end
+
     context "and max_age isn't an integer" do
       let(:opts) { {max_age: "a string"} }
 
@@ -66,7 +72,7 @@ describe NightcrawlerSwift do
 
     it "returns the given options" do
       NightcrawlerSwift.configure(opts)
-      expect(NightcrawlerSwift.options).to eql(OpenStruct.new(opts))
+      expect(NightcrawlerSwift.options).to eql(OpenStruct.new(opts.merge(verify_ssl: false)))
     end
   end
 

@@ -9,6 +9,7 @@ describe NightcrawlerSwift::Command do
   before do
     allow(NightcrawlerSwift).to receive(:connection).and_return(connection)
     allow(RestClient::Resource).to receive(:new).and_return(restclient)
+    NightcrawlerSwift.configure
   end
 
   let(:connection) { double(:connection, token_id: token) }

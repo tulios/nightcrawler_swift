@@ -8,7 +8,7 @@ describe NightcrawlerSwift::Upload do
   end
 
   before do
-    NightcrawlerSwift.configure {}
+    NightcrawlerSwift.configure
   end
 
   describe "#execute" do

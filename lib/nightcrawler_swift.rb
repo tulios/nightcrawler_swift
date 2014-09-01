@@ -30,10 +30,12 @@ module NightcrawlerSwift
     # - username
     # - password
     # - auth_url
-    # - max_age (optional)
+    #
+    # - max_age (optional, default: nil)
+    # - verify_ssl (optional, default: false)
     #
     def configure opts = {}
-      @options = OpenStruct.new opts
+      @options = OpenStruct.new({verify_ssl: false}.merge(opts))
 
       if @options.max_age and not @options.max_age.is_a?(Numeric)
         raise Exceptions::ConfigurationError.new "max_age should be an Integer"

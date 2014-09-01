@@ -32,9 +32,16 @@ config.nightcrawler_swift.tenant_name = "nightcrawler"
 config.nightcrawler_swift.username = "my_username1"
 config.nightcrawler_swift.password = "my_password1"
 config.nightcrawler_swift.auth_url = "https://auth.url.com:123/v2.0/tokens"
-config.nightcrawler_swift.max_age = 3600 # optional
 ```
-**max_age** will be used to define *Cache-Control:max-age=<value>* header. It's not required.
+
+__Optional configurations:__
+
+```ruby
+config.nightcrawler_swift.max_age = 3600 # default: nil
+config.nightcrawler_swift.verify_ssl = true # default: false
+```
+
+_max_age_ will be used to define *Cache-Control:max-age=<value>* header.
 
 By default it will use ```Rails.logger``` as logger, to change that use a different logger in configurations, like:
 
@@ -61,8 +68,14 @@ NightcrawlerSwift.configure({
   username: "my_username1",
   password: "my_password1",
   auth_url: "https://auth.url.com:123/v2.0/tokens",
-  max_age: 3600 # optional
 })
+```
+
+__Optional configurations:__
+
+```ruby
+max_age: 3600,
+verify_ssl: true
 ```
 
 By default it will use ```Logger.new(STDOUT)``` as logger, to change that use:
