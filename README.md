@@ -56,7 +56,7 @@ config.nightcrawler_swift.logger = Logger.new(STDOUT)
 rake nightcrawler_swift:rails:asset_sync
 ```
 
-It will invoke ```rake assets:precompile``` and will copy your public directory to swift bucket/container.
+It will invoke ```rake assets:precompile``` and will copy your public directory to swift bucket/container. To sync the public directory without the asset precompilation use the task: ```nightcrawler_swift:rails:sync```
 
 ### Programatically
 
