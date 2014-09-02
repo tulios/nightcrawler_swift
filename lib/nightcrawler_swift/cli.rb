@@ -9,6 +9,11 @@ module NightcrawlerSwift
       "list" => {
         description: "List all files of the bucket/container. Ex: nswift list",
         command: NightcrawlerSwift::List
+      },
+
+      "download" => {
+        description: "Download a file by path, Ex: nswift download assets/robots.txt > my-robots.txt",
+        command: NightcrawlerSwift::Download
       }
     }
 
@@ -24,7 +29,7 @@ module NightcrawlerSwift
     def run
       configure_default_options
       parse_parameters
-      @command_name = argv.pop
+      @command_name = argv.shift
       validate_command_and_options
       execute_command if @command_name
     end
@@ -33,6 +38,11 @@ module NightcrawlerSwift
     def command_list command
       array = command.new.execute
       array.each {|hash| log hash["name"]}
+    end
+
+    def command_download command
+      filepath = argv.first
+      log command.new.execute(filepath)
     end
 
     def user_home_dir
@@ -76,13 +86,16 @@ module NightcrawlerSwift
     def execute_command
       NightcrawlerSwift.configure config_hash
       connect_and_execute do
-        command = COMMANDS[@command_name][:command]
-
-        case @command_name
-          when "list"
-            self.send("command_#{@command_name}", command)
+        if command = COMMANDS[@command_name]
+          command_module = command[:command]
+          command_method = "command_#{@command_name}"
+          self.send(command_method, command_module)
         end
       end
+
+    rescue Exceptions::BaseError => e
+      log e.message
+      exit 1
     end
 
     def connect_and_execute &block
