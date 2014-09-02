@@ -21,7 +21,7 @@ module NightcrawlerSwift
     attr_reader :options, :connection
 
     def logger
-      @logger || Logger.new(STDOUT)
+      @logger ||= Logger.new(STDOUT)
     end
 
     # Hash with:

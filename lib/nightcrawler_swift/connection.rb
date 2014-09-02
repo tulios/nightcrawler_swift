@@ -1,13 +1,11 @@
 module NightcrawlerSwift
   class Connection
-    attr_reader :auth_response, :token_id, :expires_at, :catalog, :admin_url, :upload_url, :public_url
+    attr_accessor :auth_response
+    attr_reader :token_id, :expires_at, :catalog, :admin_url, :upload_url, :public_url
 
     def connect!
       authenticate!
-      select_token
-      select_catalog
-      select_endpoints
-      configure_urls
+      configure
 
       NightcrawlerSwift.logger.info  "[NightcrawlerSwift] Connected, token_id: #{token_id}"
       self
@@ -15,6 +13,13 @@ module NightcrawlerSwift
 
     def connected?
       !self.token_id.nil? and self.expires_at > Time.now
+    end
+
+    def configure
+      select_token
+      select_catalog
+      select_endpoints
+      configure_urls
     end
 
     private
