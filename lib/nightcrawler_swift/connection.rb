@@ -7,7 +7,7 @@ module NightcrawlerSwift
       authenticate!
       configure
 
-      NightcrawlerSwift.logger.info  "[NightcrawlerSwift] Connected, token_id: #{token_id}"
+      NightcrawlerSwift.logger.debug  "[NightcrawlerSwift] Connected, token_id: #{token_id}"
       self
     end
 
