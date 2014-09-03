@@ -33,11 +33,13 @@ module NightcrawlerSwift
         passwordCredentials: {username: opts.username, password: opts.password}
       }
 
-      response = RestClient.post(
-        opts.auth_url, { auth: auth_options }.to_json,
-        content_type: :json,
-        accept: :json,
+      resource = RestClient::Resource.new(
+        opts.auth_url,
+        verify_ssl: NightcrawlerSwift.options.verify_ssl,
+        timeout: NightcrawlerSwift.options.timeout
       )
+
+      response = resource.post({ auth: auth_options }.to_json, content_type: :json, accept: :json)
 
       @auth_response = OpenStruct.new(JSON.parse(response.body))
     rescue StandardError => e

@@ -8,7 +8,7 @@ describe NightcrawlerSwift::Connection do
       tenant_name: "tenant_username1",
       username: "username1",
       password: "some-pass",
-      auth_url: "https://auth.url.com:123/v2.0/tokens",
+      auth_url: "https://auth-url-com:123/v2.0/tokens",
       max_age: 31536000 # 1 year
     }
   end
@@ -47,9 +47,18 @@ describe NightcrawlerSwift::Connection do
     end
 
     describe "when it connects" do
+      let :resource do
+        RestClient::Resource.new(
+          opts[:auth_url],
+          verify_ssl: NightcrawlerSwift.options.verify_ssl,
+          timeout: NightcrawlerSwift.options.timeout
+        )
+      end
+
       before do
-        allow(RestClient).to receive(:post).
-          with(opts[:auth_url], auth_json, content_type: :json, accept: :json).
+        allow(RestClient::Resource).to receive(:new).and_return(resource)
+        allow(resource).to receive(:post).
+          with(auth_json, content_type: :json, accept: :json).
           and_return(auth_success_response)
       end
 

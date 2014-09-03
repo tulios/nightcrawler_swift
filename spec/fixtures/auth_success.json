@@ -7,9 +7,9 @@
             "type" : "object-store",
             "endpoints" : [
                {
-                  "publicURL" : "http://public.url.com",
-                  "internalURL" : "http://internal.url.com",
-                  "adminURL" : "http://api.url.com",
+                  "publicURL" : "http://public-url-com",
+                  "internalURL" : "http://internal-url-com",
+                  "adminURL" : "http://api-url-com",
                   "region" : "RegionOne",
                   "id" : "1"
                }
@@ -21,9 +21,9 @@
             "type" : "identity",
             "endpoints" : [
                {
-                  "publicURL" : "http://auth.url.com:123/v2.0",
-                  "internalURL" : "https://auth.url.com:123/v2.0",
-                  "adminURL" : "https://auth.url.com:321/v2.0",
+                  "publicURL" : "http://auth-url-com:123/v2.0",
+                  "internalURL" : "https://auth-url-com:123/v2.0",
+                  "adminURL" : "https://auth-url-com:321/v2.0",
                   "region" : "RegionOne",
                   "id" : "2"
                }
