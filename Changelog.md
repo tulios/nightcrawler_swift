@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.4.0
+
+  - Better catalog selection
+  - Treatment for no catalogs returned
+  - Splited asset_sync task in two other tasks: sync and asset_sync
+  - Configurable verify_ssl and timeout
+  - Automatic connect/reconnect of commands
+  - Bugfix: download command was not using the bucket/container name
+  - Bugfix: the etag header must not be quoted
+  - CLI with basic commands (list, download, upload and delete)
+
 ## 0.3.0
 
   - Included ```Cache-Control``` header to upload command through max_age configuration parameter
