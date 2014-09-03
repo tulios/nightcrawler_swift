@@ -14,9 +14,12 @@ describe NightcrawlerSwift do
       subject.logger = nil
     end
 
-    it "returns an instance of Logger when not configured" do
-      expect(Logger).to receive(:new).with(STDOUT)
-      subject.logger
+    context "when not configured" do
+      it "returns an instance of Logger with INFO level" do
+        expect(Logger).to receive(:new).with(STDOUT).and_call_original
+        subject.logger
+        expect(subject.logger.level).to eql(Logger::INFO)
+      end
     end
 
     it "returns the configured logger" do

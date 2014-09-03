@@ -1,5 +1,6 @@
 require "date"
 require "logger"
+require "digest"
 require "ostruct"
 require "multi_mime"
 require "rest_client"
@@ -21,7 +22,7 @@ module NightcrawlerSwift
     attr_reader :options, :connection
 
     def logger
-      @logger ||= Logger.new(STDOUT)
+      @logger ||= Logger.new(STDOUT).tap {|l| l.level = Logger::INFO}
     end
 
     # Hash with:
