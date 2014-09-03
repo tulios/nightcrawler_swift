@@ -6,17 +6,27 @@ Like the X-Men nightcrawler this gem teleports your assets to a OpenStack Swift 
 
 Add this line to your application's Gemfile:
 
-    gem 'nightcrawler_swift'
+```ruby
+gem 'nightcrawler_swift'
+```
 
 And then execute:
 
-    $ bundle
+```sh
+$ bundle
+```
 
 Or install it yourself as:
 
-    $ gem install nightcrawler_swift
+```sh
+$ gem install nightcrawler_swift
+```
 
 ## Usage
+
+* [With Rails](https://github.com/tulios/nightcrawler_swift#with-rails)
+* [Programatically](https://github.com/tulios/nightcrawler_swift#programatically)
+* [Command Line](https://github.com/tulios/nightcrawler_swift#command-line)
 
 ### With Rails
 #### 1) Configure your swift credentials and options
@@ -89,6 +99,45 @@ NightcrawlerSwift.logger = Logger.new(StringIO.new)
 NightcrawlerSwift.sync File.expand_path("./my-dir")
 ```
 
+### Command Line
+
+The NightcrawlerSwift shell command (CLI) allows you to interact with your buckets/containers easily, it has the same commands of the gem. To see the help, use the cli without arguments or use the _-h_/_--help_ switch.
+
+```sh
+nswift # or nswift -h
+```
+
+```nswift``` will use the configurations stored at the file __.nswiftrc__ located at your home directory. If you try to use any command without the file, it will create a sample configuration for you, but you can create your own.
+
+The configuration is a __json__ file, named __.nswiftrc__. Follow the format:
+
+```json
+{
+  "bucket": "<bucket/container name>",
+  "tenant_name": "<tenant name>",
+  "username": "<username>",
+  "password": "<password>",
+  "auth_url": "<auth url, ex: https://auth.url.com:123/v2.0/tokens>"
+}
+```
+
+The following commands are available through the cli:
+
+```sh
+nswift list
+```
+```sh
+nswift upload <real path> <swift path> # nswift upload robots.txt assets/robots.txt
+```
+```sh
+nswift download <swift path> # nswift download assets/robots.txt > my-robots.txt
+```
+```sh
+nswift delete <swift path> # nswift delete assets/robots.txt
+```
+
+For any commands you could provide a different configuration file through the _-c_/_--config_ switch, as: ```nswift list -c /dir/my-nswift-rc```
+
 ## Commands
 
 NightcrawlerSwift has some useful built-in commands. All commands require the configuration and will __automatically__ connect/reconnect to keystone when necessary.
@@ -129,6 +178,13 @@ delete.execute "my_file_path.txt"
 # true / false
 ```
 
+### Sync
+
+```ruby
+sync = NightcrawlerSwift::Sync.new
+sync.execute "/dir/to/synchronize"
+```
+
 ## Connection
 
 To manually establish the connection with keystone, use:
@@ -145,6 +201,22 @@ NightcrawlerSwift.connection.connected?
 
 To reconnect just use ```NightcrawlerSwift.connection.connect!``` again.
 
+## Options
+
+After configure the NightcrawlerSwift you can access your configurations through the __options__ method, like:
+
+```ruby
+NightcrawlerSwift.options
+```
+
+The only difference is that you will access each configuration as a method instead of a hash style, like:
+
+```ruby
+NightcrawlerSwift.configure tenant_name: "rogue"
+
+# Can be used as:
+NightcrawlerSwift.options.tenant_name # "rogue"
+```
 
 ## Contributing
 
