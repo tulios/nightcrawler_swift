@@ -265,4 +265,29 @@ describe NightcrawlerSwift::CLI do
     end
   end
 
+  describe "command delete" do
+    let(:filepath) { "testfile.txt" }
+    let(:argv) { ["delete", filepath] }
+    let(:command) { NightcrawlerSwift::Delete.new }
+    let(:command_method) { :command_delete }
+
+    it_behaves_like "CLI with default options"
+    it_behaves_like "CLI with parsed parameters"
+    it_behaves_like "CLI that creates a sample config file"
+    it_behaves_like "CLI that uses the configured command"
+
+    context "when executing the command" do
+      before do
+        File.open(config_file, "w") {|f| f.write(opts.to_json)}
+      end
+
+      it "downloads the file" do
+        expect(NightcrawlerSwift::Delete).to receive(:new).and_return(command)
+        expect(command).to receive(:execute).with(filepath).and_return(true)
+        expect(subject).to receive(:log).with("success")
+        subject.run
+      end
+    end
+  end
+
 end

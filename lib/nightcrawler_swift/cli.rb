@@ -12,13 +12,18 @@ module NightcrawlerSwift
       },
 
       "download" => {
-        description: "Downloads a file by path. Ex: nswift download assets/robots.txt > my-robots.txt",
+        description: "Downloads a file by path. Format: nswift download <swift path> Ex: nswift download assets/robots.txt > my-robots.txt",
         command: NightcrawlerSwift::Download
       },
 
       "upload" => {
         description: "Uploads some file. Format: nswift upload <real path> <swift path> Ex: nswift upload assets/robots.txt robots.txt",
         command: NightcrawlerSwift::Upload
+      },
+
+      "delete" => {
+        description: "Deletes a file by path. Format: nswift delete <swift path> Ex: nswift delete robots.txt",
+        command: NightcrawlerSwift::Delete
       }
     }
 
@@ -56,6 +61,12 @@ module NightcrawlerSwift
 
       uploaded = command.new.execute swiftpath, File.open(File.expand_path(realpath), "r")
       log(uploaded ? "success" : "failure")
+    end
+
+    def command_delete command
+      filepath = argv.first
+      deleted = command.new.execute(filepath).to_json
+      log(deleted ? "success" : "failure")
     end
 
     def user_home_dir
