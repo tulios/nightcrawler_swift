@@ -7,13 +7,18 @@ module NightcrawlerSwift
     CACHE_FILE = ".nswift_cache"
     COMMANDS = {
       "list" => {
-        description: "List all files of the bucket/container. Ex: nswift list",
+        description: "Lists all files of the bucket/container. Ex: nswift list",
         command: NightcrawlerSwift::List
       },
 
       "download" => {
-        description: "Download a file by path, Ex: nswift download assets/robots.txt > my-robots.txt",
+        description: "Downloads a file by path. Ex: nswift download assets/robots.txt > my-robots.txt",
         command: NightcrawlerSwift::Download
+      },
+
+      "upload" => {
+        description: "Uploads some file. Format: nswift upload <real path> <swift path> Ex: nswift upload assets/robots.txt robots.txt",
+        command: NightcrawlerSwift::Upload
       }
     }
 
@@ -43,6 +48,14 @@ module NightcrawlerSwift
     def command_download command
       filepath = argv.first
       log command.new.execute(filepath)
+    end
+
+    def command_upload command
+      realpath = argv.shift
+      swiftpath = argv.shift
+
+      uploaded = command.new.execute swiftpath, File.open(File.expand_path(realpath), "r")
+      log(uploaded ? "success" : "failure")
     end
 
     def user_home_dir

@@ -234,4 +234,35 @@ describe NightcrawlerSwift::CLI do
     end
   end
 
+  describe "command upload" do
+    let(:swiftpath) { "testfile.txt" }
+    let(:realpath) { File.join(config_dir, swiftpath) }
+    let(:argv) { ["upload", realpath, swiftpath] }
+    let(:command) { NightcrawlerSwift::Upload.new }
+    let(:command_method) { :command_upload }
+
+    it_behaves_like "CLI with default options"
+    it_behaves_like "CLI with parsed parameters"
+    it_behaves_like "CLI that creates a sample config file"
+    it_behaves_like "CLI that uses the configured command"
+
+    context "when executing the command" do
+      before do
+        File.open(config_file, "w") {|f| f.write(opts.to_json)}
+        File.open(realpath, "w") {|f| f.write("test") }
+      end
+
+      after do
+        File.delete(realpath) if File.exist?(realpath)
+      end
+
+      it "uploads the file" do
+        expect(NightcrawlerSwift::Upload).to receive(:new).and_return(command)
+        expect(command).to receive(:execute).with(swiftpath, instance_of(File)).and_return(true)
+        expect(subject).to receive(:log).with("success")
+        subject.run
+      end
+    end
+  end
+
 end
