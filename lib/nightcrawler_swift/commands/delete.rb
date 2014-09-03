@@ -3,7 +3,7 @@ module NightcrawlerSwift
 
     def execute path
       response = delete "#{connection.upload_url}/#{path}", headers: {accept: :json }
-      JSON.parse(response.body)
+      [200, 201].include?(response.code)
 
     rescue RestClient::ResourceNotFound => e
       raise Exceptions::NotFoundError.new(e)

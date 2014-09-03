@@ -29,7 +29,7 @@ describe NightcrawlerSwift::Delete do
 
     context "success" do
       let :response do
-        double(:response, code: 200, body: {a: 1}.to_json)
+        double(:response, code: 200)
       end
 
       it "deletes using upload url" do
@@ -37,8 +37,8 @@ describe NightcrawlerSwift::Delete do
         expect(subject).to have_received(:delete).with("server-url/file_path", headers: {accept: :json})
       end
 
-      it "returns the parsed json" do
-        expect(execute).to eql "a" => 1
+      it "returns true" do
+        expect(execute).to eql true
       end
     end
 
