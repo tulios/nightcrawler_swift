@@ -19,6 +19,14 @@ describe NightcrawlerSwift::CLI::Runner do
     JSON.parse File.read(File.join(config_dir, "auth_success.json"))
   end
 
+  let :formatter do
+    NightcrawlerSwift::CLI::Formatters::Basic.new(subject)
+  end
+
+  let :filepath do
+    "testfile.txt"
+  end
+
   let :opts do
     {
       "bucket"      => "my-bucket-name",
@@ -35,6 +43,7 @@ describe NightcrawlerSwift::CLI::Runner do
 
   before do
     allow(subject).to receive(:user_home_dir).and_return(config_dir)
+    allow(NightcrawlerSwift::CLI::Formatters::Basic).to receive(:new).and_return(formatter)
   end
 
   after do
@@ -180,134 +189,45 @@ describe NightcrawlerSwift::CLI::Runner do
     let(:argv) { ["list"] }
     let(:command) { NightcrawlerSwift::List.new }
     let(:command_method) { :command_list }
-    let(:formatter) { NightcrawlerSwift::CLI::Formatters::Basic.new(subject) }
-    let :result do
-      [{
-        "hash"=>"c9df50d4a29542f8b6d426a50c72b3de",
-        "last_modified"=>"2014-08-27T19:35:46.053560",
-        "bytes"=>4994,
-        "name"=>"assets/file.png",
-        "content_type"=>"image/png"
-      }]
-    end
-
-    before do
-      allow(NightcrawlerSwift::CLI::Formatters::Basic).to receive(:new).and_return(formatter)
-    end
 
     it_behaves_like "CLI with default options"
     it_behaves_like "CLI with parsed parameters"
     it_behaves_like "CLI that creates a sample config file"
     it_behaves_like "CLI that uses the configured command"
-
-    context "when executing the command" do
-      before do
-        File.open(config_file, "w") {|f| f.write(opts.to_json)}
-      end
-
-      it "lists all files in the bucket/container configured" do
-        expect(NightcrawlerSwift::List).to receive(:new).and_return(command)
-        expect(command).to receive(:execute).and_return(result)
-        expect(subject).to receive(:log).with(result.first["name"])
-        subject.run
-      end
-    end
   end
 
   describe "command download" do
-    let(:filepath) { "testfile.txt" }
     let(:argv) { ["download", filepath] }
     let(:command) { NightcrawlerSwift::Download.new }
     let(:command_method) { :command_download }
-    let(:formatter) { NightcrawlerSwift::CLI::Formatters::Basic.new(subject) }
-
-    before do
-      allow(NightcrawlerSwift::CLI::Formatters::Basic).to receive(:new).and_return(formatter)
-    end
 
     it_behaves_like "CLI with default options"
     it_behaves_like "CLI with parsed parameters"
     it_behaves_like "CLI that creates a sample config file"
     it_behaves_like "CLI that uses the configured command"
-
-    context "when executing the command" do
-      before do
-        File.open(config_file, "w") {|f| f.write(opts.to_json)}
-      end
-
-      it "downloads the file" do
-        expect(NightcrawlerSwift::Download).to receive(:new).and_return(command)
-        expect(command).to receive(:execute).with(filepath).and_return("test-content")
-        expect(subject).to receive(:log).with("test-content")
-        subject.run
-      end
-    end
   end
 
   describe "command upload" do
-    let(:swiftpath) { "testfile.txt" }
-    let(:realpath) { File.join(config_dir, swiftpath) }
-    let(:argv) { ["upload", realpath, swiftpath] }
+    let(:realpath) { File.join(config_dir, filepath) }
+    let(:argv) { ["upload", realpath, filepath] }
     let(:command) { NightcrawlerSwift::Upload.new }
     let(:command_method) { :command_upload }
-    let(:formatter) { NightcrawlerSwift::CLI::Formatters::Basic.new(subject) }
-
-    before do
-      allow(NightcrawlerSwift::CLI::Formatters::Basic).to receive(:new).and_return(formatter)
-    end
 
     it_behaves_like "CLI with default options"
     it_behaves_like "CLI with parsed parameters"
     it_behaves_like "CLI that creates a sample config file"
     it_behaves_like "CLI that uses the configured command"
-
-    context "when executing the command" do
-      before do
-        File.open(config_file, "w") {|f| f.write(opts.to_json)}
-        File.open(realpath, "w") {|f| f.write("test") }
-      end
-
-      after do
-        File.delete(realpath) if File.exist?(realpath)
-      end
-
-      it "uploads the file" do
-        expect(NightcrawlerSwift::Upload).to receive(:new).and_return(command)
-        expect(command).to receive(:execute).with(swiftpath, instance_of(File)).and_return(true)
-        expect(subject).to receive(:log).with("success")
-        subject.run
-      end
-    end
   end
 
   describe "command delete" do
-    let(:filepath) { "testfile.txt" }
     let(:argv) { ["delete", filepath] }
     let(:command) { NightcrawlerSwift::Delete.new }
     let(:command_method) { :command_delete }
-    let(:formatter) { NightcrawlerSwift::CLI::Formatters::Basic.new(subject) }
-
-    before do
-      allow(NightcrawlerSwift::CLI::Formatters::Basic).to receive(:new).and_return(formatter)
-    end
 
     it_behaves_like "CLI with default options"
     it_behaves_like "CLI with parsed parameters"
     it_behaves_like "CLI that creates a sample config file"
     it_behaves_like "CLI that uses the configured command"
-
-    context "when executing the command" do
-      before do
-        File.open(config_file, "w") {|f| f.write(opts.to_json)}
-      end
-
-      it "downloads the file" do
-        expect(NightcrawlerSwift::Delete).to receive(:new).and_return(command)
-        expect(command).to receive(:execute).with(filepath).and_return(true)
-        expect(subject).to receive(:log).with("success")
-        subject.run
-      end
-    end
   end
 
 end
