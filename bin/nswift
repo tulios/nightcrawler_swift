@@ -5,4 +5,4 @@ $LOAD_PATH.unshift File.dirname(__FILE__) + "/../lib"
 require "nightcrawler_swift"
 require "nightcrawler_swift/cli"
 
-NightcrawlerSwift::CLI.new(ARGV).run
+NightcrawlerSwift::CLI::Runner.new(ARGV).run

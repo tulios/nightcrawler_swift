@@ -1,10 +1,10 @@
 require "spec_helper"
 require "nightcrawler_swift/cli"
 
-describe NightcrawlerSwift::CLI do
+describe NightcrawlerSwift::CLI::Runner do
 
   let :config_dir do
-    File.expand_path(File.join(File.dirname(__FILE__), "../../fixtures"))
+    File.expand_path(File.join(File.dirname(__FILE__), "../../../fixtures"))
   end
 
   let :config_file do
@@ -16,7 +16,7 @@ describe NightcrawlerSwift::CLI do
   end
 
   let :connection_success_json do
-    JSON.parse File.read(File.join(File.dirname(__FILE__), "../..", "fixtures/auth_success.json"))
+    JSON.parse File.read(File.join(config_dir, "auth_success.json"))
   end
 
   let :opts do
@@ -30,7 +30,7 @@ describe NightcrawlerSwift::CLI do
   end
 
   subject do
-    NightcrawlerSwift::CLI.new argv.dup
+    NightcrawlerSwift::CLI::Runner.new argv.dup
   end
 
   before do
@@ -131,7 +131,7 @@ describe NightcrawlerSwift::CLI do
       expect(File.exist?(config_file)).to eql false
       expect { subject.run }.to raise_error SystemExit
       expect(File.exist?(config_file)).to eql true
-      expect(File.read(config_file)).to eql subject.send(:sample_rcfile)
+      expect(File.read(config_file)).to eql NightcrawlerSwift::CLI.sample_rcfile
     end
 
     it "flags as not configured" do
@@ -146,7 +146,7 @@ describe NightcrawlerSwift::CLI do
     end
 
     before do
-      allow(subject).to receive(command_method)
+      allow(formatter).to receive(command_method)
       allow(NightcrawlerSwift).to receive(:connection).and_return(connection)
       File.open(config_file, "w") {|f| f.write(opts.to_json)}
     end
@@ -180,6 +180,7 @@ describe NightcrawlerSwift::CLI do
     let(:argv) { ["list"] }
     let(:command) { NightcrawlerSwift::List.new }
     let(:command_method) { :command_list }
+    let(:formatter) { NightcrawlerSwift::CLI::Formatters::Basic.new(subject) }
     let :result do
       [{
         "hash"=>"c9df50d4a29542f8b6d426a50c72b3de",
@@ -188,6 +189,10 @@ describe NightcrawlerSwift::CLI do
         "name"=>"assets/file.png",
         "content_type"=>"image/png"
       }]
+    end
+
+    before do
+      allow(NightcrawlerSwift::CLI::Formatters::Basic).to receive(:new).and_return(formatter)
     end
 
     it_behaves_like "CLI with default options"
@@ -214,6 +219,11 @@ describe NightcrawlerSwift::CLI do
     let(:argv) { ["download", filepath] }
     let(:command) { NightcrawlerSwift::Download.new }
     let(:command_method) { :command_download }
+    let(:formatter) { NightcrawlerSwift::CLI::Formatters::Basic.new(subject) }
+
+    before do
+      allow(NightcrawlerSwift::CLI::Formatters::Basic).to receive(:new).and_return(formatter)
+    end
 
     it_behaves_like "CLI with default options"
     it_behaves_like "CLI with parsed parameters"
@@ -240,6 +250,11 @@ describe NightcrawlerSwift::CLI do
     let(:argv) { ["upload", realpath, swiftpath] }
     let(:command) { NightcrawlerSwift::Upload.new }
     let(:command_method) { :command_upload }
+    let(:formatter) { NightcrawlerSwift::CLI::Formatters::Basic.new(subject) }
+
+    before do
+      allow(NightcrawlerSwift::CLI::Formatters::Basic).to receive(:new).and_return(formatter)
+    end
 
     it_behaves_like "CLI with default options"
     it_behaves_like "CLI with parsed parameters"
@@ -270,6 +285,11 @@ describe NightcrawlerSwift::CLI do
     let(:argv) { ["delete", filepath] }
     let(:command) { NightcrawlerSwift::Delete.new }
     let(:command_method) { :command_delete }
+    let(:formatter) { NightcrawlerSwift::CLI::Formatters::Basic.new(subject) }
+
+    before do
+      allow(NightcrawlerSwift::CLI::Formatters::Basic).to receive(:new).and_return(formatter)
+    end
 
     it_behaves_like "CLI with default options"
     it_behaves_like "CLI with parsed parameters"
