@@ -37,7 +37,7 @@ module NightcrawlerSwift::CLI
     end
 
     def configure_option_config
-      @parser.on("-c", "--config=PATH", String, "Alternative '#{CONFIG_FILE}' file") do |path|
+      @parser.on("-c", "--config=PATH", String, "Alternative '#{NightcrawlerSwift::CLI::CONFIG_FILE}' file") do |path|
         path = File.expand_path(path.strip)
         @runner.log "Using custom config file at: #{path}"
         @runner.options.config_file = path

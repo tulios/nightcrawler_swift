@@ -70,66 +70,6 @@ describe NightcrawlerSwift::CLI::Runner do
     end
   end
 
-  shared_examples "CLI with parsed parameters" do
-    context "--version or -v" do
-      it "prints the version number" do
-        subject.argv << "-v"
-        expect(subject).to receive(:log).with(NightcrawlerSwift::VERSION)
-        expect { subject.run }.to raise_error SystemExit
-
-        expect(subject).to receive(:log).with(NightcrawlerSwift::VERSION)
-        subject.argv = (argv << "--version")
-        expect { subject.run }.to raise_error SystemExit
-      end
-    end
-
-    context "--help or -h" do
-      before do
-        subject.send :configure_default_options
-        subject.send :configure_opt_parser
-
-        allow(subject).to receive(:configure_default_options)
-        allow(subject).to receive(:configure_opt_parser)
-      end
-
-      it "prints the help" do
-        subject.argv << "-h"
-        expect(subject).to receive(:log).with(subject.opt_parser.help)
-        expect { subject.run }.to raise_error SystemExit
-
-        expect(subject).to receive(:log).with(subject.opt_parser.help)
-        subject.argv = (argv << "--help")
-        expect { subject.run }.to raise_error SystemExit
-      end
-    end
-
-    context "--config or -c" do
-      let :config_file do
-        File.join(config_dir, "#{NightcrawlerSwift::CLI::CONFIG_FILE}-test")
-      end
-
-      before do
-        allow(subject).to receive(:execute_command)
-        allow(subject).to receive(:log)
-        File.open(config_file, "w") {|f| f.write("test")}
-      end
-
-      after do
-        File.delete(config_file) if File.exist?(config_file)
-      end
-
-      it "configures the config_file" do
-        subject.argv << "-c #{config_file}"
-        subject.run
-        expect(subject.options.config_file).to eql config_file
-
-        subject.argv = (argv << "--config=#{config_file}")
-        subject.run
-        expect(subject.options.config_file).to eql config_file
-      end
-    end
-  end
-
   shared_examples "CLI that creates a sample config file" do
     before do
       allow(subject).to receive(:execute_command)
@@ -191,7 +131,6 @@ describe NightcrawlerSwift::CLI::Runner do
     let(:command_method) { :command_list }
 
     it_behaves_like "CLI with default options"
-    it_behaves_like "CLI with parsed parameters"
     it_behaves_like "CLI that creates a sample config file"
     it_behaves_like "CLI that uses the configured command"
   end
@@ -202,7 +141,6 @@ describe NightcrawlerSwift::CLI::Runner do
     let(:command_method) { :command_download }
 
     it_behaves_like "CLI with default options"
-    it_behaves_like "CLI with parsed parameters"
     it_behaves_like "CLI that creates a sample config file"
     it_behaves_like "CLI that uses the configured command"
   end
@@ -214,7 +152,6 @@ describe NightcrawlerSwift::CLI::Runner do
     let(:command_method) { :command_upload }
 
     it_behaves_like "CLI with default options"
-    it_behaves_like "CLI with parsed parameters"
     it_behaves_like "CLI that creates a sample config file"
     it_behaves_like "CLI that uses the configured command"
   end
@@ -225,7 +162,6 @@ describe NightcrawlerSwift::CLI::Runner do
     let(:command_method) { :command_delete }
 
     it_behaves_like "CLI with default options"
-    it_behaves_like "CLI with parsed parameters"
     it_behaves_like "CLI that creates a sample config file"
     it_behaves_like "CLI that uses the configured command"
   end
