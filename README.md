@@ -60,7 +60,7 @@ config.nightcrawler_swift.logger = Logger.new(STDOUT)
 #### 2) Profit!
 
 ```sh
-rake nightcrawler_swift:rails:asset_sync
+$ rake nightcrawler_swift:rails:asset_sync
 ```
 
 It will invoke ```rake assets:precompile``` and will copy your public directory to swift bucket/container. To sync the public directory without the asset precompilation use the task: ```nightcrawler_swift:rails:sync```
@@ -104,7 +104,7 @@ NightcrawlerSwift.sync File.expand_path("./my-dir")
 The NightcrawlerSwift shell command (CLI) allows you to interact with your buckets/containers easily, it has the same commands of the gem. To see the help, use the cli without arguments or use the _-h_/_--help_ switch.
 
 ```sh
-nswift # or nswift -h
+$ nswift # or nswift -h
 ```
 
 ```nswift``` will use the configurations stored at the file __.nswiftrc__ located at your home directory. If you try to use any command without the file, it will create a sample configuration for you, but you can create your own.
@@ -124,19 +124,29 @@ The configuration is a __json__ file, named __.nswiftrc__. Follow the format:
 The following commands are available through the cli:
 
 ```sh
-nswift list
+$ nswift list
 ```
 ```sh
-nswift upload <real path> <swift path> # nswift upload robots.txt assets/robots.txt
+$ nswift upload <real path> <swift path> # nswift upload robots.txt assets/robots.txt
 ```
 ```sh
-nswift download <swift path> # nswift download assets/robots.txt > my-robots.txt
+$ nswift download <swift path> # nswift download assets/robots.txt > my-robots.txt
 ```
 ```sh
-nswift delete <swift path> # nswift delete assets/robots.txt
+$ nswift delete <swift path> # nswift delete assets/robots.txt
 ```
 
-For any commands you could provide a different configuration file through the _-c_/_--config_ switch, as: ```nswift list -c /dir/my-nswift-rc```
+For any commands you could provide a different configuration file through the _-c_/_--config_ switch, as:
+
+```sh
+$ nswift list -c /dir/my-nswift-rc
+```
+
+and a different bucket/container name through the _-b_/_--bucket_ switch, as:
+
+```sh
+$ nwift list -b rogue
+```
 
 ## Commands
 
