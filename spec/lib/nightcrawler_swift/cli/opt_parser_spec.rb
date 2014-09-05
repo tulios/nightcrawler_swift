@@ -4,7 +4,7 @@ require "nightcrawler_swift/cli"
 describe NightcrawlerSwift::CLI::OptParser do
 
   let :runner do
-    instance_double "Runner", options: OpenStruct.new(config_file: nil, default_config_file: true)
+    instance_double "Runner", options: OpenStruct.new(bucket: nil, config_file: nil, default_config_file: true)
   end
 
   let :config_dir do
@@ -59,6 +59,25 @@ describe NightcrawlerSwift::CLI::OptParser do
         subject.parse!
         expect(runner.options.config_file).to eql config_file
         expect(runner.options.default_config_file).to eql false
+      end
+    end
+  end
+
+  ["-b NAME", "--bucket=NAME"].each do |switch|
+    context switch do
+      let :bucket_name do
+        "rogue"
+      end
+
+      let :command do
+        switch.gsub(/NAME/, bucket_name)
+      end
+
+      it "configures the bucket name" do
+        allow(runner).to receive(:argv).and_return([command])
+        allow(runner).to receive(:log)
+        subject.parse!
+        expect(runner.options.bucket).to eql bucket_name
       end
     end
   end

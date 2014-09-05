@@ -33,9 +33,19 @@ module NightcrawlerSwift::CLI
 
     def configure_options
       @parser.separator "options:"
+      configure_option_bucket
       configure_option_config
       configure_option_help
       configure_option_version
+    end
+
+    def configure_option_bucket
+      desc = "Alternative bucket/container name, overrides the '#{NightcrawlerSwift::CLI::CONFIG_FILE}' configuration"
+      @parser.on("-b", "--bucket=NAME", String, desc) do |name|
+        bucket = name.strip
+        @runner.options.bucket = bucket
+        @runner.log "Using bucket: #{@runner.options.bucket}"
+      end
     end
 
     def configure_option_config

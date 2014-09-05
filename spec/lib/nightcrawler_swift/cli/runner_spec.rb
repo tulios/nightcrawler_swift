@@ -116,6 +116,21 @@ describe NightcrawlerSwift::CLI::Runner do
       end
     end
 
+    context "with a custom bucket name" do
+      let(:bucket_name) { "rogue" }
+
+      before do
+        subject.send :configure_default_options
+        expect(subject.options.bucket).to be_nil
+      end
+
+      it "overrides the default name" do
+        allow(subject).to receive(:parse_parameters) { subject.options.bucket = bucket_name }
+        subject.run
+        expect(subject.options.bucket).to eql bucket_name
+      end
+    end
+
     it "writes the auth_response into cache file" do
       expect(File.exist?(cache_file)).to eql false
       expect(connection).to receive(:auth_response).and_return(OpenStruct.new(connection_success_json))
