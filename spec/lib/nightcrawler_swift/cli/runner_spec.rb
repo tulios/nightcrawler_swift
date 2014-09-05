@@ -127,7 +127,7 @@ describe NightcrawlerSwift::CLI::Runner do
       it "overrides the default name" do
         allow(subject).to receive(:parse_parameters) { subject.options.bucket = bucket_name }
         subject.run
-        expect(subject.options.bucket).to eql bucket_name
+        expect(NightcrawlerSwift.options.bucket).to eql bucket_name
       end
     end
 
