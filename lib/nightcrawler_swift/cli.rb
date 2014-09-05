@@ -17,17 +17,17 @@ module NightcrawlerSwift
       },
 
       "download" => {
-        description: "Downloads a file by path. Format: nswift download <swift path> Ex: nswift download assets/robots.txt > my-robots.txt",
+        description: "Downloads a file by path. Format: nswift download <swift_path> Ex: nswift download assets/robots.txt > my-robots.txt",
         command: NightcrawlerSwift::Download
       },
 
       "upload" => {
-        description: "Uploads some file. Format: nswift upload <real path> <swift path> Ex: nswift upload assets/robots.txt robots.txt",
+        description: "Uploads some file. Format: nswift upload <real_path> <swift_path> Ex: nswift upload assets/robots.txt robots.txt",
         command: NightcrawlerSwift::Upload
       },
 
       "delete" => {
-        description: "Deletes a file by path. Format: nswift delete <swift path> Ex: nswift delete robots.txt",
+        description: "Deletes a file by path. Format: nswift delete <swift_path> Ex: nswift delete robots.txt",
         command: NightcrawlerSwift::Delete
       }
     }
