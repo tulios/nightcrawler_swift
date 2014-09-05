@@ -1,6 +1,8 @@
 module NightcrawlerSwift::CLI
   class OptParser
 
+    attr_reader :parser
+
     def initialize runner
       @runner = runner
       @parser = OptionParser.new
@@ -8,8 +10,8 @@ module NightcrawlerSwift::CLI
       configure_options
     end
 
-    def parse! argv
-      @parser.parse!(argv)
+    def parse!
+      @parser.parse!(@runner.argv)
     end
 
     def help

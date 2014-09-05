@@ -94,7 +94,7 @@ module NightcrawlerSwift::CLI
     end
 
     def parse_parameters
-      @opt_parser.parse!(argv)
+      @opt_parser.parse!
       check_rcfile if options.default_config_file
 
     rescue OptionParser::InvalidOption => e
