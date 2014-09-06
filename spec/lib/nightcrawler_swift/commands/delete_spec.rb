@@ -23,13 +23,13 @@ describe NightcrawlerSwift::Delete do
       subject.execute "file_path"
     end
 
-    before do
-      allow(subject).to receive(:delete).and_return(response)
-    end
-
     context "success" do
       let :response do
         double(:response, code: 200)
+      end
+
+      before do
+        allow(subject).to receive(:delete).and_return(response)
       end
 
       it "deletes using upload url" do
@@ -53,6 +53,13 @@ describe NightcrawlerSwift::Delete do
 
       it "raises NightcrawlerSwift::Exceptions::NotFoundError" do
         expect { execute }.to raise_error NightcrawlerSwift::Exceptions::NotFoundError
+      end
+    end
+
+    context "when the path was not informed" do
+      it "raises NightcrawlerSwift::Exceptions::ValidationError" do
+        expect { subject.execute nil }.to raise_error NightcrawlerSwift::Exceptions::ValidationError
+        expect { subject.execute "" }.to raise_error NightcrawlerSwift::Exceptions::ValidationError
       end
     end
 
