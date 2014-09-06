@@ -74,7 +74,7 @@ module NightcrawlerSwift::CLI
         end
       end
 
-    rescue NightcrawlerSwift::Exceptions::BaseError => e
+    rescue NightcrawlerSwift::Exceptions::BaseError, Errno::ENOENT => e
       log "Error: #{e.message}"
       exit 1
     end
