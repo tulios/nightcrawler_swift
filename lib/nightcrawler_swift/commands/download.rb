@@ -2,14 +2,20 @@ module NightcrawlerSwift
   class Download < Command
 
     def execute path
-      response = get "#{connection.public_url}/#{options.bucket}/#{path}"
-      response.body
+      if path.nil? or path.empty?
+        raise Exceptions::ValidationError.new "Download command requires a path parameter"
+      end
 
-    rescue RestClient::ResourceNotFound => e
-      raise Exceptions::NotFoundError.new(e)
+      begin
+        response = get "#{connection.public_url}/#{options.bucket}/#{path}"
+        response.body
 
-    rescue StandardError => e
-      raise Exceptions::ConnectionError.new(e)
+      rescue RestClient::ResourceNotFound => e
+        raise Exceptions::NotFoundError.new(e)
+
+      rescue StandardError => e
+        raise Exceptions::ConnectionError.new(e)
+      end
     end
 
   end

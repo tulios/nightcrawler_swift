@@ -25,13 +25,13 @@ describe NightcrawlerSwift::Download do
       subject.execute "file_path"
     end
 
-    before do
-      allow(subject).to receive(:get).and_return(response)
-    end
-
     context "success" do
       let :response do
         double(:response, code: 200, body: "content")
+      end
+
+      before do
+        allow(subject).to receive(:get).and_return(response)
       end
 
       it "gets using public url" do
@@ -55,6 +55,13 @@ describe NightcrawlerSwift::Download do
 
       it "raises NightcrawlerSwift::Exceptions::NotFoundError" do
         expect { execute }.to raise_error NightcrawlerSwift::Exceptions::NotFoundError
+      end
+    end
+
+    context "when the path was not informed" do
+      it "raises NightcrawlerSwift::Exceptions::ValidationError" do
+        expect { subject.execute nil }.to raise_error NightcrawlerSwift::Exceptions::ValidationError
+        expect { subject.execute "" }.to raise_error NightcrawlerSwift::Exceptions::ValidationError
       end
     end
 

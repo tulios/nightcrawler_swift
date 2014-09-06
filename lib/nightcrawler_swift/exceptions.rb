@@ -5,7 +5,7 @@ module NightcrawlerSwift
       attr_accessor :original_exception
 
       def initialize exception
-        super(exception.message)
+        super(exception.is_a?(String) ? exception : exception.message)
         @original_exception = exception
       end
     end

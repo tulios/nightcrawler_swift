@@ -57,7 +57,7 @@ module NightcrawlerSwift::CLI
       @config_hash ||= JSON.parse(File.read(options.config_file))
 
     rescue Errno::ENOENT => e
-      log "No such file or directory - #{options.config_file}"
+      log "Error: No such file or directory - #{options.config_file}"
       exit 1
     end
 
@@ -75,7 +75,7 @@ module NightcrawlerSwift::CLI
       end
 
     rescue NightcrawlerSwift::Exceptions::BaseError => e
-      log e.message
+      log "Error: #{e.message}"
       exit 1
     end
 
