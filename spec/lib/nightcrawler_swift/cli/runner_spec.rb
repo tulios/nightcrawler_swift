@@ -181,4 +181,14 @@ describe NightcrawlerSwift::CLI::Runner do
     it_behaves_like "CLI that uses the configured command"
   end
 
+  describe "command delete" do
+    let(:argv) { ["url-for", filepath] }
+    let(:command) { NightcrawlerSwift::CLI::UrlFor.new }
+    let(:command_method) { :command_url_for }
+
+    it_behaves_like "CLI with default options"
+    it_behaves_like "CLI that creates a sample config file"
+    it_behaves_like "CLI that uses the configured command"
+  end
+
 end

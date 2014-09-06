@@ -67,9 +67,10 @@ module NightcrawlerSwift::CLI
 
       connect_and_execute do
         if command = COMMANDS[@command_name]
-          command_module = command[:command]
-          command_method = "command_#{@command_name}"
-          Formatters::Basic.new(self).send(command_method, command_module)
+          command_name_normalized = @command_name.downcase.gsub(/-/, "_")
+          command_class = command[:command]
+          command_method = "command_#{command_name_normalized}"
+          Formatters::Basic.new(self).send(command_method, command_class)
         end
       end
 

@@ -127,13 +127,16 @@ The following commands are available through the cli:
 $ nswift list
 ```
 ```sh
-$ nswift upload <real path> <swift path> # nswift upload robots.txt assets/robots.txt
+$ nswift upload <real_path> <swift_path> # nswift upload robots.txt assets/robots.txt
 ```
 ```sh
-$ nswift download <swift path> # nswift download assets/robots.txt > my-robots.txt
+$ nswift download <swift_path> # nswift download assets/robots.txt > my-robots.txt
 ```
 ```sh
-$ nswift delete <swift path> # nswift delete assets/robots.txt
+$ nswift delete <swift_path> # nswift delete assets/robots.txt
+```
+```sh
+$ nswift url-for <swift_path> # nswift url-for assets/robots.txt
 ```
 
 For any commands you could provide a different configuration file through the _-c_/_--config_ switch, as:

@@ -30,6 +30,11 @@ module NightcrawlerSwift::CLI
         @runner.log(deleted ? "success" : "failure")
       end
 
+      def command_url_for command
+        filepath = @runner.argv.first
+        @runner.log command.new.execute(filepath)
+      end
+
     end
   end
 end

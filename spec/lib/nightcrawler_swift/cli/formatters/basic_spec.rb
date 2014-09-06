@@ -100,4 +100,18 @@ describe NightcrawlerSwift::CLI::Formatters::Basic do
     end
   end
 
+  describe "#command_url_for" do
+    let :command_class do
+      NightcrawlerSwift::CLI::UrlFor
+    end
+
+    it "returns the public url of the given path" do
+      expect(command_class).to receive(:new).and_return(command)
+      expect(command).to receive(:execute).with(filepath).and_return("public-url")
+      expect(runner).to receive(:log).with("public-url")
+      expect(runner).to receive(:argv).and_return([filepath])
+      subject.command_url_for command_class
+    end
+  end
+
 end

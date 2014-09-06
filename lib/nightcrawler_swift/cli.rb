@@ -4,6 +4,7 @@ require "json"
 require "nightcrawler_swift/cli/opt_parser"
 require "nightcrawler_swift/cli/runner"
 require "nightcrawler_swift/cli/formatters/basic"
+require "nightcrawler_swift/cli/commands/url_for"
 
 module NightcrawlerSwift
   module CLI
@@ -29,6 +30,11 @@ module NightcrawlerSwift
       "delete" => {
         description: "Deletes a file by path. Format: nswift delete <swift_path> Ex: nswift delete robots.txt",
         command: NightcrawlerSwift::Delete
+      },
+
+      "url-for" => {
+        description: "Returns the public url of an object. Format: nswift url-for <swift_path> Ex: nswift url-for robots.txt",
+        command: NightcrawlerSwift::CLI::UrlFor
       }
     }
 
