@@ -13,11 +13,6 @@ describe NightcrawlerSwift::Connection do
     }
   end
 
-  let :unauthorized_error do
-    response = OpenStruct.new(body: "error", code: 401)
-    RestClient::Unauthorized.new response, response.code
-  end
-
   subject do
     NightcrawlerSwift::Connection.new
   end
@@ -111,18 +106,6 @@ describe NightcrawlerSwift::Connection do
         it "raises NightcrawlerSwift::Exceptions::ConfigurationError" do
           expect { subject.connect! }.to raise_error(NightcrawlerSwift::Exceptions::ConfigurationError)
         end
-      end
-    end
-
-    describe "when some error happens with the connection" do
-      before do
-        allow(RestClient).to receive(:post).
-          with(opts[:auth_url], auth_json, content_type: :json, accept: :json).
-          and_raise(unauthorized_error)
-      end
-
-      it "raises NightcrawlerSwift::Exceptions::ConnectionError" do
-        expect { subject.connect! }.to raise_error(NightcrawlerSwift::Exceptions::ConnectionError)
       end
     end
   end

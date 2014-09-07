@@ -19,56 +19,26 @@ describe NightcrawlerSwift::List do
   end
 
   describe "#execute" do
-    context "success" do
-      let :json_response do
-        [{"name" => "file"}]
-      end
-
-      let :response do
-        double(:response, code: 200, body: json_response.to_json)
-      end
-
-      before do
-        allow(subject).to receive(:get).and_return(response)
-      end
-
-      it "gets upload url" do
-        subject.execute
-        expect(subject).to have_received(:get).with(connection.upload_url, headers: {accept: :json})
-      end
-
-      it "returns the parsed json" do
-        result = subject.execute
-        expect(result).to eql json_response
-      end
+    let :json_response do
+      [{"name" => "file"}]
     end
 
-    context "when the bucket does not exist" do
-      let :response do
-        double(:response, code: 400)
-      end
-
-      before do
-        allow(subject).to receive(:get).and_raise(RestClient::ResourceNotFound.new(response))
-      end
-
-      it "raises NightcrawlerSwift::Exceptions::NotFoundError" do
-        expect { subject.execute }.to raise_error NightcrawlerSwift::Exceptions::NotFoundError
-      end
+    let :response do
+      double(:response, code: 200, body: json_response.to_json)
     end
 
-    context "when another error happens" do
-      let :response do
-        double(:response, code: 500)
-      end
+    before do
+      allow(subject).to receive(:get).and_return(response)
+    end
 
-      before do
-        allow(subject).to receive(:get).and_raise(RuntimeError.new(response))
-      end
+    it "gets upload url" do
+      subject.execute
+      expect(subject).to have_received(:get).with(connection.upload_url, headers: {accept: :json})
+    end
 
-      it "raises NightcrawlerSwift::Exceptions::ConnectionError" do
-        expect { subject.execute }.to raise_error NightcrawlerSwift::Exceptions::ConnectionError
-      end
+    it "returns the parsed json" do
+      result = subject.execute
+      expect(result).to eql json_response
     end
   end
 

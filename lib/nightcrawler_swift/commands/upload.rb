@@ -7,9 +7,6 @@ module NightcrawlerSwift
       headers.merge!(cache_control: "max-age=#{options.max_age}") if options.max_age
       response = put "#{connection.upload_url}/#{path}", body: content, headers: headers
       [200, 201].include?(response.code)
-
-    rescue RestClient::UnprocessableEntity => e
-      raise Exceptions::ValidationError.new(e)
     end
 
     private

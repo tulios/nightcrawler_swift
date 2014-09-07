@@ -28,22 +28,22 @@ module NightcrawlerSwift
     end
 
     def authenticate!
-      auth_options = {
-        tenantName: opts.tenant_name,
-        passwordCredentials: {username: opts.username, password: opts.password}
-      }
-
-      resource = RestClient::Resource.new(
-        opts.auth_url,
-        verify_ssl: NightcrawlerSwift.options.verify_ssl,
-        timeout: NightcrawlerSwift.options.timeout
-      )
-
-      response = resource.post({ auth: auth_options }.to_json, content_type: :json, accept: :json)
+      url = opts.auth_url
+      headers = {content_type: :json, accept: :json}
+      response = Gateway.new(url).request {|r| r.post(auth_options.to_json, headers)}
 
       @auth_response = OpenStruct.new(JSON.parse(response.body))
     rescue StandardError => e
       raise Exceptions::ConnectionError.new(e)
+    end
+
+    def auth_options
+      {
+        auth: {
+          tenantName: opts.tenant_name,
+          passwordCredentials: {username: opts.username, password: opts.password}
+        }
+      }
     end
 
     def select_token

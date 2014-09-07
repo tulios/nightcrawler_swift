@@ -17,21 +17,14 @@ describe NightcrawlerSwift::Command do
   let(:connection) { NightcrawlerSwift::Connection.new }
   let(:restclient) { double(:restclient, put: response, get: response, delete: response) }
   let(:response) { double(:response) }
-  let(:url) { "http://url.com" }
+  let(:url) { "http://url-com" }
   let(:token) { "token" }
   let(:expires_at) { (DateTime.now + 60).to_time }
 
-  shared_examples "resource configured with NightcrawlerSwift.options" do
-    it "uses the configured verify_ssl" do
-      NightcrawlerSwift.configure verify_ssl: true
+  shared_examples "command with configured gateway" do
+    it "creates a new gateway with the url" do
+      expect(NightcrawlerSwift::Gateway).to receive(:new).with(url).and_call_original
       execute_http
-      expect(RestClient::Resource).to have_received(:new).with(url, hash_including(verify_ssl: true))
-    end
-
-    it "uses the configured timeout" do
-      NightcrawlerSwift.configure timeout: 10
-      execute_http
-      expect(RestClient::Resource).to have_received(:new).with(url, hash_including(timeout: 10))
     end
   end
 
@@ -66,66 +59,58 @@ describe NightcrawlerSwift::Command do
   end
 
   describe "#get" do
-    let :get do
+    let :execute_http do
       subject.send :get, url, headers: {content_type: :json}
     end
 
-    let(:execute_http) { get }
-    it_behaves_like "resource configured with NightcrawlerSwift.options"
+    it_behaves_like "command with configured gateway"
 
     it "sends headers with token" do
-      get
+      execute_http
       expect(restclient).to have_received(:get).with(content_type: :json, "X-Storage-Token" => token)
     end
 
     it "returns RestClient response" do
-      expect(get).to eql(response)
+      expect(execute_http).to eql(response)
     end
   end
 
   describe "#delete" do
-    let :delete do
+    let :execute_http do
       subject.send :delete, url, headers: {content_type: :json}
     end
 
-    let(:execute_http) { delete }
-    it_behaves_like "resource configured with NightcrawlerSwift.options"
+    it_behaves_like "command with configured gateway"
 
     it "sends headers with token" do
-      delete
+      execute_http
       expect(restclient).to have_received(:delete).with(content_type: :json, "X-Storage-Token" => token)
     end
 
     it "returns RestClient response" do
-      expect(delete).to eql(response)
+      expect(execute_http).to eql(response)
     end
   end
 
   describe "#put" do
-    let :put do
+    let :execute_http do
       subject.send(:put, url, body: 'content', headers: {a: 1})
     end
 
-    let(:execute_http) { put }
-    it_behaves_like "resource configured with NightcrawlerSwift.options"
+    it_behaves_like "command with configured gateway"
 
     it "returns RestClient response" do
-      expect(put).to eql(response)
+      expect(execute_http).to eql(response)
     end
 
     it "sends body" do
-      put
+      execute_http
       expect(restclient).to have_received(:put).with('content', anything)
     end
 
     it "sends headers with token" do
-      put
+      execute_http
       expect(restclient).to have_received(:put).with(anything, {a: 1, "X-Storage-Token" => token})
-    end
-
-    it "uses url to initialize RestClient" do
-      put
-      expect(RestClient::Resource).to have_received(:new).with(url, verify_ssl: false, timeout: nil)
     end
   end
 

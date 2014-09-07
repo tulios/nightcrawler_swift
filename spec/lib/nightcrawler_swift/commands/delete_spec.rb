@@ -42,38 +42,10 @@ describe NightcrawlerSwift::Delete do
       end
     end
 
-    context "when the file does not exist" do
-      let :response do
-        double(:response, code: 404)
-      end
-
-      before do
-        allow(subject).to receive(:delete).and_raise(RestClient::ResourceNotFound.new(response))
-      end
-
-      it "raises NightcrawlerSwift::Exceptions::NotFoundError" do
-        expect { execute }.to raise_error NightcrawlerSwift::Exceptions::NotFoundError
-      end
-    end
-
     context "when the path was not informed" do
       it "raises NightcrawlerSwift::Exceptions::ValidationError" do
         expect { subject.execute nil }.to raise_error NightcrawlerSwift::Exceptions::ValidationError
         expect { subject.execute "" }.to raise_error NightcrawlerSwift::Exceptions::ValidationError
-      end
-    end
-
-    context "when another error happens" do
-      let :response do
-        double(:response, code: 500)
-      end
-
-      before do
-        allow(subject).to receive(:delete).and_raise(RuntimeError.new(response))
-      end
-
-      it "raises NightcrawlerSwift::Exceptions::ConnectionError" do
-        expect { execute }.to raise_error NightcrawlerSwift::Exceptions::ConnectionError
       end
     end
   end

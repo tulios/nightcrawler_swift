@@ -19,31 +19,20 @@ module NightcrawlerSwift
 
     def get url, params = {}
       prepare_params params
-      resource = resource_for url
-      resource.get(params[:headers])
+      Gateway.new(url).request {|r| r.get params[:headers]}
     end
 
     def put url, params = {}
       prepare_params params
-      resource = resource_for url
-      resource.put(params[:body], params[:headers])
+      Gateway.new(url).request {|r| r.put params[:body], params[:headers]}
     end
 
     def delete url, params
       prepare_params params
-      resource = resource_for url
-      resource.delete(params[:headers])
+      Gateway.new(url).request {|r| r.delete params[:headers]}
     end
 
     private
-
-    def resource_for url
-      RestClient::Resource.new(
-        url,
-        verify_ssl: options.verify_ssl,
-        timeout: options.timeout
-      )
-    end
 
     def prepare_params params
       params[:headers] ||= {}

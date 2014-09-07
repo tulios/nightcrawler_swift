@@ -6,16 +6,8 @@ module NightcrawlerSwift
         raise Exceptions::ValidationError.new "Delete command requires a path parameter"
       end
 
-      begin
-        response = delete "#{connection.upload_url}/#{path}", headers: {accept: :json }
-        [200, 201].include?(response.code)
-
-      rescue RestClient::ResourceNotFound => e
-        raise Exceptions::NotFoundError.new(e)
-
-      rescue StandardError => e
-        raise Exceptions::ConnectionError.new(e)
-      end
+      response = delete "#{connection.upload_url}/#{path}", headers: {accept: :json }
+      [200, 201].include?(response.code)
     end
 
   end

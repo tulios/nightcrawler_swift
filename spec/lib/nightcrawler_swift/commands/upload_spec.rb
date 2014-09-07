@@ -87,13 +87,6 @@ describe NightcrawlerSwift::Upload do
       let(:response) { double(:response, code: 500) }
       it { expect(execute).to be false }
     end
-
-    context "when rescue RestClient::UnprocessableEntity" do
-      it "wraps into NightcrawlerSwift::Exceptions::ValidationError" do
-        expect(subject).to receive(:put).and_raise(RestClient::UnprocessableEntity.new)
-        expect { execute }.to raise_error NightcrawlerSwift::Exceptions::ValidationError
-      end
-    end
   end
 
 end
