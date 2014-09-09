@@ -71,7 +71,7 @@ describe NightcrawlerSwift::Upload do
     it "sends max_age into headers" do
       NightcrawlerSwift.configure max_age: max_age
       execute
-      expect(subject).to have_received(:put).with(anything, hash_including(headers: { content_type: "text/css", etag: etag, cache_control: "max-age=#{max_age}" }))
+      expect(subject).to have_received(:put).with(anything, hash_including(headers: { content_type: "text/css", etag: etag, cache_control: "public, max-age=#{max_age}" }))
     end
 
     context "when response code is 200" do
