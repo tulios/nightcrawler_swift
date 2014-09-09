@@ -11,6 +11,7 @@ module NightcrawlerSwift
       NightcrawlerSwift.options
     end
 
+    # :nocov:
     def execute
       raise NotImplemented.new
     end
