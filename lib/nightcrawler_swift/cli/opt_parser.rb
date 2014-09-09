@@ -51,6 +51,12 @@ module NightcrawlerSwift::CLI
     def configure_option_config
       @parser.on("-c", "--config=PATH", String, "Alternative '#{NightcrawlerSwift::CLI::CONFIG_FILE}' file") do |path|
         path = File.expand_path(path.strip)
+
+        unless File.exist?(path)
+          @runner.log "Error: No such file or directory - #{path}"
+          exit 1
+        end
+
         @runner.log "Using custom config file at: #{path}"
         @runner.options.config_file = path
         @runner.options.default_config_file = false

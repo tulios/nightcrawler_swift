@@ -138,6 +138,48 @@ describe NightcrawlerSwift::CLI::Runner do
       expect(File.exist?(cache_file)).to eql true
       expect(File.read(cache_file)).to eql connection_success_json.to_json
     end
+
+    context "when rescue NightcrawlerSwift::Exceptions::BaseError" do
+      let(:message) { "error" }
+
+      before do
+        NightcrawlerSwift.logger = Logger.new(StringIO.new)
+      end
+
+      it "prints the error and exit with failure" do
+        expect(subject).to receive(:connect_and_execute).and_raise(NightcrawlerSwift::Exceptions::BaseError.new(message))
+        exited = false
+
+        begin
+          subject.run
+        rescue SystemExit => e
+          exited = true
+          expect(e.status).to eql 1
+        ensure
+          expect(exited).to eql true
+        end
+      end
+    end
+
+    context "when rescue Errno::ENOENT" do
+      before do
+        NightcrawlerSwift.logger = Logger.new(StringIO.new)
+      end
+
+      it "prints the error and exit with failure" do
+        expect(subject).to receive(:connect_and_execute).and_raise(Errno::ENOENT.new)
+        exited = false
+
+        begin
+          subject.run
+        rescue SystemExit => e
+          exited = true
+          expect(e.status).to eql 1
+        ensure
+          expect(exited).to eql true
+        end
+      end
+    end
   end
 
   describe "command list" do
@@ -189,6 +231,60 @@ describe NightcrawlerSwift::CLI::Runner do
     it_behaves_like "CLI with default options"
     it_behaves_like "CLI that creates a sample config file"
     it_behaves_like "CLI that uses the configured command"
+  end
+
+  describe "validation of commands" do
+    context "when no command is provided" do
+      let(:argv) { [] }
+
+      before do
+        subject.send :configure_default_options
+        subject.send :configure_opt_parser
+      end
+
+      it "prints the help and exit with success" do
+        exited = false
+        expect(subject).to receive(:log).with(subject.opt_parser.help)
+        begin
+          subject.run
+        rescue SystemExit => e
+          exited = true
+          expect(e.status).to eql 0
+        ensure
+          expect(exited).to eql true
+        end
+      end
+    end
+
+    context "when the command does not exist" do
+      let(:argv) { ["wrong"] }
+
+      it "prints the error and exit with failure" do
+        exited = false
+        expect(subject).to receive(:log).with("Error: Unknown command 'wrong'")
+        begin
+          subject.run
+        rescue SystemExit => e
+          exited = true
+          expect(e.status).to eql 1
+        ensure
+          expect(exited).to eql true
+        end
+      end
+    end
+  end
+
+  describe "#log" do
+    let(:argv) { [] }
+
+    before do
+      NightcrawlerSwift.logger = Logger.new(StringIO.new)
+    end
+
+    it "uses NightcrawlerSwift.logger" do
+      expect(NightcrawlerSwift).to receive(:logger).and_call_original
+      subject.log "stuff"
+    end
   end
 
 end

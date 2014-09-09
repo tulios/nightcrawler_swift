@@ -47,18 +47,19 @@ module NightcrawlerSwift::CLI
         exit
       end
 
+      unless COMMANDS.include?(@command_name)
+        log "Error: Unknown command '#{@command_name}'"
+        exit 1
+      end
+
       unless options.configured
         log "You must configure your swift credentials, take a look at:\n   #{options.config_file}"
-        exit
+        exit 1
       end
     end
 
     def config_hash
       @config_hash ||= JSON.parse(File.read(options.config_file))
-
-    rescue Errno::ENOENT => e
-      log "Error: No such file or directory - #{options.config_file}"
-      exit 1
     end
 
     def execute_command
@@ -66,17 +67,18 @@ module NightcrawlerSwift::CLI
       NightcrawlerSwift.options.bucket = @options.bucket if @options.bucket
 
       connect_and_execute do
-        if command = COMMANDS[@command_name]
-          command_name_normalized = @command_name.downcase.gsub(/-/, "_")
-          command_class = command[:command]
-          command_method = "command_#{command_name_normalized}"
-          Formatters::Basic.new(self).send(command_method, command_class)
-        end
+        command_method = "command_#{command_name_normalized}"
+        command_class = COMMANDS[@command_name][:command]
+        Formatters::Basic.new(self).send(command_method, command_class)
       end
 
     rescue NightcrawlerSwift::Exceptions::BaseError, Errno::ENOENT => e
       log "Error: #{e.message}"
       exit 1
+    end
+
+    def command_name_normalized
+      @command_name.downcase.gsub(/-/, "_")
     end
 
     def connect_and_execute &block
