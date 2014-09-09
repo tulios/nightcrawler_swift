@@ -47,6 +47,8 @@ __Optional configurations:__
 config.nightcrawler_swift.max_age = 3600 # default: nil
 config.nightcrawler_swift.verify_ssl = true # default: false
 config.nightcrawler_swift.timeout = 10 # in seconds, default: nil
+config.nightcrawler_swift.admin_url = "https://api.host.com/v1/AUTH_1234" # default: uses the admin_url returned by authentication
+config.nightcrawler_swift.public_url = "http://asset.host.com/v1/AUTH_1234" # default: uses the public_url returned by authentication
 ```
 
 _max_age_ will be used to define *Cache-Control:max-age=<value>* header.
@@ -84,7 +86,9 @@ __Optional configurations:__
 ```ruby
 max_age: 3600,
 verify_ssl: true,
-timeout: 10
+timeout: 10, # in seconds
+admin_url: "https://api.host.com/v1/AUTH_1234", # default: uses the admin_url returned by authentication
+public_url: "http://asset.host.com/v1/AUTH_1234" # default: uses the public_url returned by authentication
 ```
 
 By default it will use ```Logger.new(STDOUT)``` as logger, to change that use:
@@ -109,7 +113,7 @@ $ nswift # or nswift -h
 
 ```nswift``` will use the configurations stored at the file __.nswiftrc__ located at your home directory. If you try to use any command without the file, it will create a sample configuration for you, but you can create your own.
 
-The configuration is a __json__ file, named __.nswiftrc__. Follow the format:
+The configuration is a __json__ file, named __.nswiftrc__. You can include any configuration available to the gem (see the other usages example to know each option available). Follow the format:
 
 ```json
 {

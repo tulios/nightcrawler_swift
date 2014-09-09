@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe NightcrawlerSwift::Connection do
 
-  let :opts do
+  let :options do
     {
       bucket: "my-bucket-name",
       tenant_name: "tenant_username1",
@@ -11,6 +11,10 @@ describe NightcrawlerSwift::Connection do
       auth_url: "https://auth-url-com:123/v2.0/tokens",
       max_age: 31536000 # 1 year
     }
+  end
+
+  let :opts do
+    options
   end
 
   subject do
@@ -106,6 +110,36 @@ describe NightcrawlerSwift::Connection do
         it "raises NightcrawlerSwift::Exceptions::ConfigurationError" do
           expect { subject.connect! }.to raise_error(NightcrawlerSwift::Exceptions::ConfigurationError)
         end
+      end
+
+      context "with a configured admin_url" do
+        let(:new_admin_url){ "http://some-new-admin-url" }
+        let(:opts) { options.merge(admin_url: new_admin_url) }
+
+        it "uses the given url" do
+          subject.connect!
+          expect(subject.admin_url).to eql new_admin_url
+        end
+      end
+
+      context "with a configured public_url" do
+        let(:new_public_url) { "http://some-new-public-url" }
+        let(:opts) { options.merge(public_url: new_public_url) }
+
+        it "uses the given url" do
+          subject.connect!
+          expect(subject.public_url).to eql new_public_url
+        end
+      end
+    end
+
+    describe "when some error happens" do
+      before do
+        allow(RestClient::Resource).to receive(:new).and_raise(StandardError.new("error!"))
+      end
+
+      it "raises NightcrawlerSwift::Exceptions::ConnectionError" do
+        expect { subject.connect! }.to raise_error NightcrawlerSwift::Exceptions::ConnectionError
       end
     end
   end

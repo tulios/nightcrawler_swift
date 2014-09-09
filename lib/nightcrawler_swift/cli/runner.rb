@@ -87,6 +87,9 @@ module NightcrawlerSwift::CLI
         hash = JSON.parse File.read(path)
         NightcrawlerSwift.connection.auth_response = OpenStruct.new(hash)
         NightcrawlerSwift.connection.configure
+
+        token_id = NightcrawlerSwift.connection.token_id
+        NightcrawlerSwift.logger.debug "Cache found, restablishing connection with token_id: #{token_id}"
       end
 
       begin

@@ -7,7 +7,7 @@ module NightcrawlerSwift
       authenticate!
       configure
 
-      NightcrawlerSwift.logger.debug  "[NightcrawlerSwift] Connected, token_id: #{token_id}"
+      NightcrawlerSwift.logger.debug "[NightcrawlerSwift] Connected, token_id: #{token_id}"
       self
     end
 
@@ -63,9 +63,9 @@ module NightcrawlerSwift
     end
 
     def configure_urls
-      @admin_url = @endpoints["adminURL"]
+      @admin_url = opts.admin_url || @endpoints["adminURL"]
+      @public_url = opts.public_url || @endpoints["publicURL"]
       @upload_url = "#{@admin_url}/#{opts.bucket}"
-      @public_url = @endpoints["publicURL"]
     end
   end
 end
