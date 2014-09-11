@@ -21,11 +21,6 @@ module NightcrawlerSwift::CLI
       NightcrawlerSwift.logger.info string
     end
 
-    protected
-    def user_home_dir
-      Dir.home
-    end
-
     private
     def configure_logger
       STDOUT.sync = true
@@ -33,6 +28,7 @@ module NightcrawlerSwift::CLI
     end
 
     def configure_default_options
+      user_home_dir = Dir.home
       @options = OpenStruct.new
       @options.configured = true
       @options.default_config_file = true

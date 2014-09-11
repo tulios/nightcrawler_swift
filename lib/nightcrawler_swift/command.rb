@@ -15,6 +15,7 @@ module NightcrawlerSwift
     def execute
       raise NotImplemented.new
     end
+    # :nocov:
 
     protected
 

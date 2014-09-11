@@ -42,7 +42,7 @@ describe NightcrawlerSwift::CLI::Runner do
   end
 
   before do
-    allow(subject).to receive(:user_home_dir).and_return(config_dir)
+    allow(Dir).to receive(:home).and_return(config_dir)
     allow(NightcrawlerSwift::CLI::Formatters::Basic).to receive(:new).and_return(formatter)
   end
 
