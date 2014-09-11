@@ -1,11 +1,21 @@
 # Changelog
 
+## 0.5.0
+
+  - CLI now supports ```-b/--bucket``` to override the default bucket/container (issue #10)
+  - CLI command for printing the public url of a given path (issue #18)
+  - CLI better treatment for errors and invalid commands
+  - Bugfix: CLI when receives a invalid command doesn't shows that it is an invalid command (issue #20)
+  - Configurable ```admin_url``` and ```public_url``` (issue #14)
+  - Included "public" directive in ```Cache-Control``` header
+  - Each request will retry X times before failing, the number of retries and the max waiting time can be configured through options
+
 ## 0.4.0
 
   - Better catalog selection
   - Treatment for no catalogs returned
-  - Splited asset_sync task in two other tasks: sync and asset_sync
-  - Configurable verify_ssl and timeout
+  - Splited asset_sync task in two other tasks: ```sync``` and ```asset_sync```
+  - Configurable ```verify_ssl``` and ```timeout```
   - Automatic connect/reconnect of commands
   - Bugfix: download command was not using the bucket/container name
   - Bugfix: the etag header must not be quoted
