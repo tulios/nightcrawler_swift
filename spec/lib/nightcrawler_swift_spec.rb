@@ -3,7 +3,6 @@ require "spec_helper"
 describe NightcrawlerSwift do
 
   let(:opts) { {bucket: "rogue"} }
-  let(:options) { OpenStruct.new(opts) }
 
   subject do
     NightcrawlerSwift
@@ -50,6 +49,18 @@ describe NightcrawlerSwift do
       end
     end
 
+    context "retries" do
+      it "defauts to 5" do
+        expect(subject.options.retries).to eql 5
+      end
+    end
+
+    context "max_retry_time" do
+      it "defauts to 30" do
+        expect(subject.options.max_retry_time).to eql 30
+      end
+    end
+
     context "and max_age isn't an integer" do
       let(:opts) { {max_age: "a string"} }
 
@@ -75,7 +86,9 @@ describe NightcrawlerSwift do
 
     it "returns the given options" do
       NightcrawlerSwift.configure(opts)
-      expect(NightcrawlerSwift.options).to eql(OpenStruct.new(opts.merge(verify_ssl: false)))
+      opts.keys.each do |key|
+        expect(NightcrawlerSwift.options).to respond_to key
+      end
     end
   end
 

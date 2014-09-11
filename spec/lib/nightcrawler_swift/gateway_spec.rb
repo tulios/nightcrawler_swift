@@ -78,12 +78,60 @@ describe NightcrawlerSwift::Gateway do
         double(:response, code: 500)
       end
 
-      before do
-        allow(subject.resource).to receive(:get).and_raise(RuntimeError.new(response))
+      let :retries do
+        3
       end
 
-      it "raises NightcrawlerSwift::Exceptions::ConnectionError" do
-        expect { request_get }.to raise_error NightcrawlerSwift::Exceptions::ConnectionError
+      context "with enough retries" do
+        it "recovers from the failure" do
+          expect(subject.resource).to receive(:get).once.and_raise(RuntimeError.new(response))
+          expect(subject.resource).to receive(:get).once.and_return(true)
+          expect(subject).to receive(:sleep).once.with(1)
+          expect(subject).to_not receive(:sleep).with(2)
+          expect { request_get }.to_not raise_error
+          expect(subject.attempts).to eql(2) # original + one retry
+        end
+      end
+
+      context "with all retries used" do
+        before do
+          NightcrawlerSwift.options.retries = retries
+        end
+
+        it "waits a time based on the attempt number and if no one results in a good request it raises the exception" do
+          expect(subject.instance_variable_get(:@retries)).to eql retries
+          expect(subject.resource).to receive(:get).exactly(4).times.and_raise(RuntimeError.new(response))
+          expect(subject).to receive(:sleep).once.with(1)
+          expect(subject).to receive(:sleep).once.with(2)
+          expect(subject).to receive(:sleep).once.with(4)
+          expect { request_get }.to raise_error NightcrawlerSwift::Exceptions::ConnectionError
+          expect(subject.attempts).to eql(retries + 1)
+        end
+
+        context "and the time achieves max_retry_time" do
+          it "waits the max_retry_time for every retry" do
+            current_retry_time = NightcrawlerSwift.options.max_retry_time - 1
+            subject.instance_variable_set(:@current_retry_time, current_retry_time)
+            expect(subject.resource).to receive(:get).exactly(4).times.and_raise(RuntimeError.new(response))
+            expect(subject).to receive(:sleep).once.with(current_retry_time)
+            expect(subject).to receive(:sleep).twice.with(NightcrawlerSwift.options.max_retry_time)
+            expect { request_get }.to raise_error NightcrawlerSwift::Exceptions::ConnectionError
+            expect(subject.attempts).to eql(retries + 1)
+          end
+        end
+      end
+
+      context "with retries set to false" do
+        before do
+          NightcrawlerSwift.options.retries = false
+          expect(subject).to_not receive(:sleep)
+        end
+
+        it "raises NightcrawlerSwift::Exceptions::ConnectionError" do
+          expect(subject.resource).to receive(:get).once.and_raise(RuntimeError.new(response))
+          expect { request_get }.to raise_error NightcrawlerSwift::Exceptions::ConnectionError
+          expect(subject.attempts).to eql(1)
+        end
       end
     end
   end

@@ -37,8 +37,12 @@ module NightcrawlerSwift
     # - verify_ssl (optional, default: false)
     # - timeout (in seconds. Optional, default: nil)
     #
+    # - retries (default: 3)
+    # - max_retry_time (in seconds, default: 30)
+    #
     def configure opts = {}
-      @options = OpenStruct.new({verify_ssl: false}.merge(opts))
+      defaults = {verify_ssl: false, retries: 5, max_retry_time: 30}
+      @options = OpenStruct.new(defaults.merge(opts))
 
       if @options.max_age and not @options.max_age.is_a?(Numeric)
         raise Exceptions::ConfigurationError.new "max_age should be an Integer"

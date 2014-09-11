@@ -49,15 +49,29 @@ config.nightcrawler_swift.verify_ssl = true # default: false
 config.nightcrawler_swift.timeout = 10 # in seconds, default: nil
 config.nightcrawler_swift.admin_url = "https://api.host.com/v1/AUTH_1234" # default: uses the admin_url returned by authentication
 config.nightcrawler_swift.public_url = "http://asset.host.com/v1/AUTH_1234" # default: uses the public_url returned by authentication
+config.nightcrawler_swift.retries = 3 # default: 5, to disable set it to false
+config.nightcrawler_swift.max_retry_time = 64 # in seconds, default: 30
 ```
-
-_max_age_ will be used to define *Cache-Control:max-age=<value>* header.
 
 By default it will use ```Rails.logger``` as logger, to change that use a different logger in configurations, like:
 
 ```ruby
 config.nightcrawler_swift.logger = Logger.new(STDOUT)
 ```
+
+##### further explanation of configurations
+
+> max_age
+
+It will be used to define *Cache-Control:max-age=<value>* header.
+
+> retries
+
+The number of times to retry the request before failing. To disable this feature set it to __false__.
+
+> max_retry_time
+
+Maximum delay in seconds between each retry. The delay will start with 1s and will double for each retry until this value.
 
 #### 2) Profit!
 
@@ -88,7 +102,9 @@ max_age: 3600,
 verify_ssl: true,
 timeout: 10, # in seconds
 admin_url: "https://api.host.com/v1/AUTH_1234", # default: uses the admin_url returned by authentication
-public_url: "http://asset.host.com/v1/AUTH_1234" # default: uses the public_url returned by authentication
+public_url: "http://asset.host.com/v1/AUTH_1234", # default: uses the public_url returned by authentication
+retries: 3, # default: 5, to disable set it to false
+max_retry_time: 64 # in seconds, default: 30
 ```
 
 By default it will use ```Logger.new(STDOUT)``` as logger, to change that use:
