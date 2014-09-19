@@ -42,7 +42,11 @@ module NightcrawlerSwift
     # - max_retry_time (in seconds, default: 30)
     #
     def configure opts = {}
+      opts = opts.inject({}) {|h,(k,v)| h[k.to_sym] = v; h} # symbolize_keys
+
       defaults = {verify_ssl: false, retries: 5, max_retry_time: 30}
+      opts[:password] = ENV["NSWIFT_PASSWORD"] || opts[:password]
+
       @options = OpenStruct.new(defaults.merge(opts))
 
       if @options.max_age and not @options.max_age.is_a?(Numeric)

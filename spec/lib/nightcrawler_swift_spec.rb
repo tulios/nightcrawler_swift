@@ -61,6 +61,22 @@ describe NightcrawlerSwift do
       end
     end
 
+    context "password" do
+      before do
+        expect(ENV).to receive(:[]).with("NSWIFT_PASSWORD").and_return("123")
+      end
+
+      it "can be defined by the ENV variable 'NSWIFT_PASSWORD'" do
+        subject.configure
+        expect(subject.options.password).to eql "123"
+      end
+
+      it "takes the ENV variable in precedence" do
+        subject.configure password: "345"
+        expect(subject.options.password).to eql "123"
+      end
+    end
+
     context "and max_age isn't an integer" do
       let(:opts) { {max_age: "a string"} }
 

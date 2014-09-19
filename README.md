@@ -41,6 +41,8 @@ config.nightcrawler_swift.password = "my_password1"
 config.nightcrawler_swift.auth_url = "https://auth.url.com:123/v2.0/tokens"
 ```
 
+The __password__ option can be left blank and be defined by the env variable __NSWIFT_PASSWORD__. The env variable will take precedence if the option was set.
+
 __Optional configurations:__
 
 ```ruby
@@ -94,6 +96,9 @@ NightcrawlerSwift.configure({
   auth_url: "https://auth.url.com:123/v2.0/tokens"
 })
 ```
+
+The __password__ option can be left blank and be defined by the env variable __NSWIFT_PASSWORD__. The env variable will take precedence if the option was set.
+
 
 __Optional configurations:__
 

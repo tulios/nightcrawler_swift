@@ -4,7 +4,8 @@
 
   - Upload command allows a custom max-age (issue #23)
   - CLI now supports a ```--max-age``` to override the default max_age
-  - Included ```Expires``` header to upload command based on max_age configuration
+  - Included ```Expires``` header to upload command based on max_age configuration (issue #9)
+  - The _password_ option can be defined by the env variable ```NSWIFT_PASSWORD``` (issue #21)
 
 ## 0.5.0
 
