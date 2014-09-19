@@ -4,7 +4,7 @@ require "nightcrawler_swift/cli"
 describe NightcrawlerSwift::CLI::OptParser do
 
   let :runner do
-    instance_double "Runner", options: OpenStruct.new(bucket: nil, config_file: nil, default_config_file: true)
+    instance_double "Runner", options: OpenStruct.new(config_hash: {}, config_file: nil, default_config_file: true)
   end
 
   let :config_dir do
@@ -108,7 +108,26 @@ describe NightcrawlerSwift::CLI::OptParser do
           allow(runner).to receive(:argv).and_return([command])
           allow(runner).to receive(:log)
           subject.parse!
-          expect(runner.options.bucket).to eql bucket_name
+          expect(runner.options.config_hash).to include(bucket: bucket_name)
+        end
+      end
+    end
+
+    ["--max-age=VALUE"].each do |switch|
+      context switch do
+        let :max_age do
+          300
+        end
+
+        let :command do
+          switch.gsub(/VALUE/, max_age.to_s)
+        end
+
+        it "configures the max-age" do
+          allow(runner).to receive(:argv).and_return([command])
+          allow(runner).to receive(:log)
+          subject.parse!
+          expect(runner.options.config_hash).to include(max_age: max_age)
         end
       end
     end

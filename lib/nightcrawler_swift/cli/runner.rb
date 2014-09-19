@@ -34,7 +34,7 @@ module NightcrawlerSwift::CLI
       @options.default_config_file = true
       @options.config_file = File.expand_path(File.join(user_home_dir, CONFIG_FILE))
       @options.cache_file = File.expand_path(File.join(user_home_dir, CACHE_FILE))
-      @options.bucket = nil
+      @options.config_hash = {}
     end
 
     def validate_command_and_options
@@ -59,8 +59,7 @@ module NightcrawlerSwift::CLI
     end
 
     def execute_command
-      NightcrawlerSwift.configure config_hash
-      NightcrawlerSwift.options.bucket = @options.bucket if @options.bucket
+      NightcrawlerSwift.configure config_hash.merge(@options.config_hash)
 
       connect_and_execute do
         command_method = "command_#{command_name_normalized}"

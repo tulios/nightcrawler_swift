@@ -149,6 +149,13 @@ $ nswift list
 ```sh
 $ nswift upload <real_path> <swift_path> # nswift upload robots.txt assets/robots.txt
 ```
+
+Upload also supports a custom max-age, to override the value defined in ".nswiftrc", example:
+
+```sh
+$ nswift upload <real_path> <swift_path> --max-age VALUE # nswift upload readme assets/readme.md --max-age 300
+```
+
 ```sh
 $ nswift download <swift_path> # nswift download assets/robots.txt > my-robots.txt
 ```
@@ -185,7 +192,7 @@ upload.execute "my_file_path.txt", File.open("../my_file_fullpath.txt", "r")
 
 _This upload command was not designed to send very large files_.
 
-It will accept a custom max-age, overriding the configured value through ```NightcrawlerSwift.configure```. Example:
+It will accept a custom max-age, overriding the configured value through ```NightcrawlerSwift.configure```, example:
 
 ```ruby
 upload = NightcrawlerSwift::Upload.new

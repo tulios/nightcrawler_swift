@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.6.0 (work in progress)
+
+  - Upload command allows a custom max-age (issue #23)
+  - CLI now supports a ```--max-age``` to override the default max_age
+
 ## 0.5.0
 
   - CLI now supports ```-b/--bucket``` to override the default bucket/container (issue #10)

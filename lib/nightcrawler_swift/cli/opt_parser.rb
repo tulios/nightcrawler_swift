@@ -34,6 +34,7 @@ module NightcrawlerSwift::CLI
     def configure_options
       @parser.separator "options:"
       configure_option_bucket
+      configure_option_max_age
       configure_option_config
       configure_option_help
       configure_option_version
@@ -43,8 +44,17 @@ module NightcrawlerSwift::CLI
       desc = "Alternative bucket/container name, overrides the '#{NightcrawlerSwift::CLI::CONFIG_FILE}' configuration"
       @parser.on("-b", "--bucket=NAME", String, desc) do |name|
         bucket = name.strip
-        @runner.options.bucket = bucket
-        @runner.log "Using bucket: #{@runner.options.bucket}"
+        @runner.options.config_hash[:bucket] = bucket
+        @runner.log "Using bucket: #{bucket}"
+      end
+    end
+
+    def configure_option_max_age
+      desc = "Custom max_age value, it overrides the value configured at '#{NightcrawlerSwift::CLI::CONFIG_FILE}'"
+      @parser.on("--max-age=VALUE", String, desc) do |value|
+        max_age = value.strip.to_i
+        @runner.options.config_hash[:max_age] = max_age
+        @runner.log "Using max_age: #{max_age}"
       end
     end
 

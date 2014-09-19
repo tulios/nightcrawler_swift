@@ -121,13 +121,28 @@ describe NightcrawlerSwift::CLI::Runner do
 
       before do
         subject.send :configure_default_options
-        expect(subject.options.bucket).to be_nil
+        expect(subject.options.config_hash).to eql({})
       end
 
       it "overrides the default name" do
-        allow(subject).to receive(:parse_parameters) { subject.options.bucket = bucket_name }
+        allow(subject).to receive(:parse_parameters) { subject.options.config_hash[:bucket] = bucket_name }
         subject.run
         expect(NightcrawlerSwift.options.bucket).to eql bucket_name
+      end
+    end
+
+    context "with a custom max-age" do
+      let(:max_age) { 300 }
+
+      before do
+        subject.send :configure_default_options
+        expect(subject.options.config_hash).to eql({})
+      end
+
+      it "overrides the default name" do
+        allow(subject).to receive(:parse_parameters) { subject.options.config_hash[:max_age] = max_age }
+        subject.run
+        expect(NightcrawlerSwift.options.max_age).to eql max_age
       end
     end
 
