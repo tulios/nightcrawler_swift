@@ -69,16 +69,45 @@ describe NightcrawlerSwift::Upload do
     end
 
     context "max_age" do
+      let :default_headers do
+        {content_type: "text/css", etag: etag}
+      end
+
       it "sends default max_age into headers" do
         NightcrawlerSwift.configure max_age: max_age
         execute
-        expect(subject).to have_received(:put).with(anything, hash_including(headers: { content_type: "text/css", etag: etag, cache_control: "public, max-age=#{max_age}" }))
+        expect(subject).to have_received(:put).with(
+          anything,
+          hash_including(
+            headers: hash_including(default_headers.merge(cache_control: "public, max-age=#{max_age}"))
+          )
+        )
       end
 
       it "allows custom max_age" do
         NightcrawlerSwift.configure
         subject.execute path, file, max_age: 1
-        expect(subject).to have_received(:put).with(anything, hash_including(headers: { content_type: "text/css", etag: etag, cache_control: "public, max-age=1" }))
+        expect(subject).to have_received(:put).with(
+          anything,
+          hash_including(
+            headers: hash_including(default_headers.merge(cache_control: "public, max-age=1"))
+          )
+        )
+      end
+
+      it "also sends the expires header based on max_age" do
+        now = Time.now
+        allow(Time).to receive(:now).and_return(now)
+        expires = CGI.rfc1123_date(Time.now + max_age)
+
+        NightcrawlerSwift.configure max_age: max_age
+        execute
+        expect(subject).to have_received(:put).with(
+          anything,
+          hash_including(
+            headers: default_headers.merge(cache_control: "public, max-age=#{max_age}", expires:  expires)
+          )
+        )
       end
     end
 

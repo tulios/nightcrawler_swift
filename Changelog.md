@@ -4,6 +4,7 @@
 
   - Upload command allows a custom max-age (issue #23)
   - CLI now supports a ```--max-age``` to override the default max_age
+  - Included ```Expires``` header to upload command based on max_age configuration
 
 ## 0.5.0
 

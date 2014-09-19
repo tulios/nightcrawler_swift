@@ -1,3 +1,4 @@
+require "cgi"
 require "date"
 require "logger"
 require "digest"
