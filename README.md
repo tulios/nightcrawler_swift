@@ -183,7 +183,15 @@ upload.execute "my_file_path.txt", File.open("../my_file_fullpath.txt", "r")
 # true / false
 ```
 
-_This upload command was not designed to send very large files_
+_This upload command was not designed to send very large files_.
+
+It will accept a custom max-age, overriding the configured value through ```NightcrawlerSwift.configure```. Example:
+
+```ruby
+upload = NightcrawlerSwift::Upload.new
+upload.execute "readme", File.open("readme.md", "r"), max_age: 300
+# true / false
+```
 
 ### Download
 

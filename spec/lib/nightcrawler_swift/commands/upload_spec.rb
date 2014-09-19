@@ -68,10 +68,18 @@ describe NightcrawlerSwift::Upload do
       expect(subject).to have_received(:put).with("server-url/file_name", anything)
     end
 
-    it "sends max_age into headers" do
-      NightcrawlerSwift.configure max_age: max_age
-      execute
-      expect(subject).to have_received(:put).with(anything, hash_including(headers: { content_type: "text/css", etag: etag, cache_control: "public, max-age=#{max_age}" }))
+    context "max_age" do
+      it "sends default max_age into headers" do
+        NightcrawlerSwift.configure max_age: max_age
+        execute
+        expect(subject).to have_received(:put).with(anything, hash_including(headers: { content_type: "text/css", etag: etag, cache_control: "public, max-age=#{max_age}" }))
+      end
+
+      it "allows custom max_age" do
+        NightcrawlerSwift.configure
+        subject.execute path, file, max_age: 1
+        expect(subject).to have_received(:put).with(anything, hash_including(headers: { content_type: "text/css", etag: etag, cache_control: "public, max-age=1" }))
+      end
     end
 
     context "when response code is 200" do
