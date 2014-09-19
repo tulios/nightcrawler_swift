@@ -31,9 +31,19 @@ describe NightcrawlerSwift::List do
       allow(subject).to receive(:get).and_return(response)
     end
 
-    it "gets upload url" do
+    it "gets upload url without parameters" do
       subject.execute
-      expect(subject).to have_received(:get).with(connection.upload_url, headers: {accept: :json})
+      expect(subject).to have_received(:get).with(connection.upload_url, headers: { accept: :json }, params: {})
+    end
+
+    it "gets upload url with accepted parameters" do
+      subject.execute prefix: 'some/prefix', limit: 2
+      expect(subject).to have_received(:get).with(connection.upload_url, headers: { accept: :json }, params: { prefix: 'some/prefix', limit: 2 })
+    end
+
+    it "gets upload url without unknown parameters" do
+      subject.execute prefix: 'some/prefix', a: 'b'
+      expect(subject).to have_received(:get).with(connection.upload_url, headers: { accept: :json }, params: { prefix: 'some/prefix' })
     end
 
     it "returns the parsed json" do

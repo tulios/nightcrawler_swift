@@ -223,6 +223,12 @@ list.execute
 # [{"hash": "...", "name": "my_file_path.txt"}, {}, {}, ...]
 ```
 
+```ruby
+list = NightcrawlerSwift::List.new
+list.execute prefix: '/some/path'
+# [{"hash": "...", "name": "/some/path/with/my_file_path.txt"}, {}, {}, ...]
+```
+
 ### Delete
 
 ```ruby

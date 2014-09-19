@@ -60,14 +60,24 @@ describe NightcrawlerSwift::Command do
 
   describe "#get" do
     let :execute_http do
-      subject.send :get, url, headers: {content_type: :json}
+      subject.send :get, url, body: 'ignore_me', headers: { content_type: :json }, params: { b: 2 }
     end
 
     it_behaves_like "command with configured gateway"
 
+    it "ignores body" do
+      execute_http
+      expect(restclient).to have_received(:get).with(kind_of(Hash))
+    end
+
     it "sends headers with token" do
       execute_http
-      expect(restclient).to have_received(:get).with(content_type: :json, "X-Storage-Token" => token)
+      expect(restclient).to have_received(:get).with(hash_including({ content_type: :json, "X-Storage-Token" => token }))
+    end
+
+    it "sends params" do
+      execute_http
+      expect(restclient).to have_received(:get).with(hash_including(params: { b: 2 }))
     end
 
     it "returns RestClient response" do
@@ -77,14 +87,24 @@ describe NightcrawlerSwift::Command do
 
   describe "#delete" do
     let :execute_http do
-      subject.send :delete, url, headers: {content_type: :json}
+      subject.send :delete, url, body: 'ignore_me', headers: { content_type: :json }, params: { b: 2 }
     end
 
     it_behaves_like "command with configured gateway"
 
+    it "ignores body" do
+      execute_http
+      expect(restclient).to have_received(:delete).with(kind_of(Hash))
+    end
+
     it "sends headers with token" do
       execute_http
-      expect(restclient).to have_received(:delete).with(content_type: :json, "X-Storage-Token" => token)
+      expect(restclient).to have_received(:delete).with(hash_including({ content_type: :json, "X-Storage-Token" => token }))
+    end
+
+    it "sends params" do
+      execute_http
+      expect(restclient).to have_received(:delete).with(hash_including(params: { b: 2 }))
     end
 
     it "returns RestClient response" do
@@ -94,7 +114,7 @@ describe NightcrawlerSwift::Command do
 
   describe "#put" do
     let :execute_http do
-      subject.send(:put, url, body: 'content', headers: {a: 1})
+      subject.send :put, url, body: 'content', headers: { a: 1 }, params: { b: 2 }
     end
 
     it_behaves_like "command with configured gateway"
@@ -105,12 +125,17 @@ describe NightcrawlerSwift::Command do
 
     it "sends body" do
       execute_http
-      expect(restclient).to have_received(:put).with('content', anything)
+      expect(restclient).to have_received(:put).with('content', kind_of(Hash))
     end
 
     it "sends headers with token" do
       execute_http
-      expect(restclient).to have_received(:put).with(anything, {a: 1, "X-Storage-Token" => token})
+      expect(restclient).to have_received(:put).with(anything, hash_including({ a: 1, "X-Storage-Token" => token }))
+    end
+
+    it "sends params" do
+      execute_http
+      expect(restclient).to have_received(:put).with(anything, hash_including(params: { b: 2 }))
     end
   end
 

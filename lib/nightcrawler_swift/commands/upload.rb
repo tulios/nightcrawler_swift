@@ -2,13 +2,13 @@ module NightcrawlerSwift
   class Upload < Command
 
     def execute path, file, opts = {}
-      content = file.read
-      headers = {etag: etag(content), content_type: content_type(file)}
+      body = file.read
+      headers = {etag: etag(body), content_type: content_type(file)}
 
       max_age = opts[:max_age] || options.max_age
       headers.merge!(cache_control: "public, max-age=#{max_age}", expires: expires(max_age)) if max_age
 
-      response = put "#{connection.upload_url}/#{path}", body: content, headers: headers
+      response = put "#{connection.upload_url}/#{path}", body: body, headers: headers
       [200, 201].include?(response.code)
     end
 

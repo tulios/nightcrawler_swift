@@ -19,26 +19,27 @@ module NightcrawlerSwift
 
     protected
 
-    def get url, params = {}
-      prepare_params params
-      Gateway.new(url).request {|r| r.get params[:headers]}
+    def get url, args = {}
+      prepare_args args
+      Gateway.new(url).request {|r| r.get args[:headers].merge(params: args[:params])}
     end
 
-    def put url, params = {}
-      prepare_params params
-      Gateway.new(url).request {|r| r.put params[:body], params[:headers]}
+    def put url, args = {}
+      prepare_args args
+      Gateway.new(url).request {|r| r.put args[:body], args[:headers].merge(params: args[:params])}
     end
 
-    def delete url, params
-      prepare_params params
-      Gateway.new(url).request {|r| r.delete params[:headers]}
+    def delete url, args = {}
+      prepare_args args
+      Gateway.new(url).request {|r| r.delete args[:headers].merge(params: args[:params])}
     end
 
     private
 
-    def prepare_params params
-      params[:headers] ||= {}
-      params[:headers]["X-Storage-Token"] = connection.token_id
+    def prepare_args args
+      args[:headers] ||= {}
+      args[:headers]["X-Storage-Token"] = connection.token_id
+      args[:params] ||= {}
     end
   end
 end
