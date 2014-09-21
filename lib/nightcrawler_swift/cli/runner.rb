@@ -55,7 +55,7 @@ module NightcrawlerSwift::CLI
     end
 
     def config_hash
-      @config_hash ||= JSON.parse(File.read(options.config_file))
+      @config_hash ||= JSON.parse(File.read(options.config_file), symbolize_names: true) rescue {}
     end
 
     def execute_command

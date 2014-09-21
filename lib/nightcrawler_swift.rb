@@ -7,6 +7,7 @@ require "multi_mime"
 require "rest_client"
 require "nightcrawler_swift/version"
 require "nightcrawler_swift/exceptions"
+require "nightcrawler_swift/ext/hash"
 require "nightcrawler_swift/gateway"
 require "nightcrawler_swift/connection"
 require "nightcrawler_swift/command"
@@ -42,8 +43,7 @@ module NightcrawlerSwift
     # - max_retry_time (in seconds, default: 30)
     #
     def configure opts = {}
-      opts = opts.inject({}) {|h,(k,v)| h[k.to_sym] = v; h} # symbolize_keys
-
+      opts.symbolize_keys!
       defaults = {verify_ssl: false, retries: 5, max_retry_time: 30}
       opts[:password] = ENV["NSWIFT_PASSWORD"] || opts[:password]
 

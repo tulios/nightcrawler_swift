@@ -101,7 +101,7 @@ describe NightcrawlerSwift::CLI::Runner do
     end
 
     it "configures NightcrawlerSwift" do
-      expect(NightcrawlerSwift).to receive(:configure).with opts
+      expect(NightcrawlerSwift).to receive(:configure).with opts.symbolize_keys
       subject.run
     end
 
