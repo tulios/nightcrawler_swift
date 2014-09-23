@@ -10,12 +10,16 @@ describe NightcrawlerSwift::Gateway do
     subject.request {|r| r.get}
   end
 
+  let :opts do
+    {}
+  end
+
   subject do
     NightcrawlerSwift::Gateway.new url
   end
 
   before do
-    NightcrawlerSwift.configure
+    NightcrawlerSwift.configure opts
   end
 
   describe "initialization" do
@@ -26,6 +30,79 @@ describe NightcrawlerSwift::Gateway do
         timeout: NightcrawlerSwift.options.timeout
       )
       subject
+    end
+
+    context "with ssl options" do
+      context "but only 'ssl_client_cert'" do
+        let :opts do
+          {verify_ssl: true, ssl_client_cert: "somecert.pem"}
+        end
+
+        it "uses the configured option" do
+          expect(RestClient::Resource).to receive(:new).with(
+            url,
+            timeout: NightcrawlerSwift.options.timeout,
+            verify_ssl: NightcrawlerSwift.options.verify_ssl,
+            ssl_client_cert: NightcrawlerSwift.options.ssl_client_cert
+          )
+          subject
+        end
+      end
+
+      context "but only 'ssl_client_key'" do
+        let :opts do
+          {verify_ssl: true, ssl_client_key: "clientkey"}
+        end
+
+        it "uses the configured option" do
+          expect(RestClient::Resource).to receive(:new).with(
+            url,
+            timeout: NightcrawlerSwift.options.timeout,
+            verify_ssl: NightcrawlerSwift.options.verify_ssl,
+            ssl_client_key: NightcrawlerSwift.options.ssl_client_key
+          )
+          subject
+        end
+      end
+
+      context "but only 'ssl_ca_file'" do
+        let :opts do
+          {verify_ssl: true, ssl_ca_file: "Certificate Authority File"}
+        end
+
+        it "uses the configured option" do
+          expect(RestClient::Resource).to receive(:new).with(
+            url,
+            timeout: NightcrawlerSwift.options.timeout,
+            verify_ssl: NightcrawlerSwift.options.verify_ssl,
+            ssl_ca_file: NightcrawlerSwift.options.ssl_ca_file
+          )
+          subject
+        end
+      end
+
+      context "using all options" do
+        let :opts do
+          {
+            verify_ssl: true,
+            ssl_client_cert: "somecert.pem",
+            ssl_client_key: "clientkey",
+            ssl_ca_file: "Certificate Authority File"
+          }
+        end
+
+        it "uses the configured options" do
+          expect(RestClient::Resource).to receive(:new).with(
+            url,
+            timeout: NightcrawlerSwift.options.timeout,
+            verify_ssl: NightcrawlerSwift.options.verify_ssl,
+            ssl_client_cert: NightcrawlerSwift.options.ssl_client_cert,
+            ssl_client_key: NightcrawlerSwift.options.ssl_client_key,
+            ssl_ca_file: NightcrawlerSwift.options.ssl_ca_file
+          )
+          subject
+        end
+      end
     end
   end
 

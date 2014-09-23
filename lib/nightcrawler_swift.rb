@@ -43,6 +43,9 @@ module NightcrawlerSwift
     # - max_retry_time (in seconds, default: 30)
     #
     # - verify_ssl (optional, default: false)
+    # - ssl_client_cert (optional, default: nil)
+    # - ssl_client_key (optional, default: nil)
+    # - ssl_ca_file (optional, default: nil)
     #
     def configure opts = {}
       opts.symbolize_keys!

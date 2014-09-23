@@ -47,12 +47,33 @@ __Optional configurations:__
 
 ```ruby
 config.nightcrawler_swift.max_age = 3600 # default: nil
-config.nightcrawler_swift.verify_ssl = true # default: false
 config.nightcrawler_swift.timeout = 10 # in seconds, default: nil
-config.nightcrawler_swift.admin_url = "https://api.host.com/v1/AUTH_1234" # default: uses the admin_url returned by authentication
-config.nightcrawler_swift.public_url = "http://asset.host.com/v1/AUTH_1234" # default: uses the public_url returned by authentication
-config.nightcrawler_swift.retries = 3 # default: 5, to disable set it to false
-config.nightcrawler_swift.max_retry_time = 64 # in seconds, default: 30
+
+# default: uses the admin_url returned by authentication
+config.nightcrawler_swift.admin_url = "https://api.host.com/v1/AUTH_1234"
+
+# default: uses the public_url returned by authentication
+config.nightcrawler_swift.public_url = "http://asset.host.com/v1/AUTH_1234"
+
+# default: 5, to disable set it to false
+config.nightcrawler_swift.retries = 3
+
+# in seconds, default: 30
+config.nightcrawler_swift.max_retry_time = 64
+
+# default: false. You could use OpenSSL::SSL::VERIFY_PEER
+config.nightcrawler_swift.verify_ssl = true
+
+# default: nil
+config.nightcrawler_swift.ssl_client_cert =
+  OpenSSL::X509::Certificate.new(File.read("cert.pem"))
+
+# default: nil
+config.nightcrawler_swift.ssl_client_key =
+  OpenSSL::PKey::RSA.new(File.read("key.pem"), "passphrase, if any")
+
+# default: nil
+config.nightcrawler_swift.ssl_ca_file = "ca_certificate.pem"
 ```
 
 By default it will use ```Rails.logger``` as logger, to change that use a different logger in configurations, like:
@@ -104,12 +125,33 @@ __Optional configurations:__
 
 ```ruby
 max_age: 3600,
-verify_ssl: true,
 timeout: 10, # in seconds
-admin_url: "https://api.host.com/v1/AUTH_1234", # default: uses the admin_url returned by authentication
-public_url: "http://asset.host.com/v1/AUTH_1234", # default: uses the public_url returned by authentication
-retries: 3, # default: 5, to disable set it to false
-max_retry_time: 64 # in seconds, default: 30
+
+# default: uses the admin_url returned by authentication
+admin_url: "https://api.host.com/v1/AUTH_1234",
+
+# default: uses the public_url returned by authentication
+public_url: "http://asset.host.com/v1/AUTH_1234",
+
+# default: 5, to disable set it to false
+retries: 3,
+
+# in seconds, default: 30
+max_retry_time: 64
+
+# default: false. You could use OpenSSL::SSL::VERIFY_PEER
+verify_ssl: true,
+
+# default: nil
+ssl_client_cert:
+  OpenSSL::X509::Certificate.new(File.read("cert.pem")),
+
+# default: nil
+ssl_client_key:
+  OpenSSL::PKey::RSA.new(File.read("key.pem"), "passphrase, if any"),
+
+# default: nil
+ssl_ca_file: "ca_certificate.pem"
 ```
 
 By default it will use ```Logger.new(STDOUT)``` as logger, to change that use:

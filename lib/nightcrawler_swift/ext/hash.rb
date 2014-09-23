@@ -15,6 +15,23 @@ module NightcrawlerSwift
       end
     end
 
+    unless {}.respond_to?(:compact)
+      def compact
+        {}.tap do |result|
+          keys.each {|k| result[k] = self[k] unless self[k].nil?}
+        end
+      end
+
+      def compact!
+        self.tap do
+          keys.each do |k|
+            value = delete(k)
+            self[k] = value unless value.nil?
+          end
+        end
+      end
+    end
+
   end
 end
 

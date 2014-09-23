@@ -18,8 +18,7 @@ module NightcrawlerSwift
 
       @resource = RestClient::Resource.new(
         @url,
-        verify_ssl: NightcrawlerSwift.options.verify_ssl,
-        timeout: NightcrawlerSwift.options.timeout
+        {timeout: options.timeout}.merge(ssl_options)
       )
     end
 
@@ -49,6 +48,22 @@ module NightcrawlerSwift
     private
     def log message
       NightcrawlerSwift.logger.debug message
+    end
+
+    def options
+      NightcrawlerSwift.options
+    end
+
+    def ssl_options
+      [
+        :verify_ssl,
+        :ssl_client_cert,
+        :ssl_client_key,
+        :ssl_ca_file
+
+      ].inject({}) {|hash, key|
+        hash.tap {hash[key] = options[key]}
+      }.compact
     end
 
     def recoverable? e
