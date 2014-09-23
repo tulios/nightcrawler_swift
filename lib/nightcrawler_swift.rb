@@ -8,6 +8,7 @@ require "rest_client"
 require "nightcrawler_swift/version"
 require "nightcrawler_swift/exceptions"
 require "nightcrawler_swift/ext/hash"
+require "nightcrawler_swift/options"
 require "nightcrawler_swift/gateway"
 require "nightcrawler_swift/connection"
 require "nightcrawler_swift/command"
@@ -36,23 +37,16 @@ module NightcrawlerSwift
     # - auth_url
     #
     # - max_age (optional, default: nil)
-    # - verify_ssl (optional, default: false)
     # - timeout (in seconds. Optional, default: nil)
     #
     # - retries (default: 3)
     # - max_retry_time (in seconds, default: 30)
     #
+    # - verify_ssl (optional, default: false)
+    #
     def configure opts = {}
       opts.symbolize_keys!
-      defaults = {verify_ssl: false, retries: 5, max_retry_time: 30}
-      opts[:password] = ENV["NSWIFT_PASSWORD"] || opts[:password]
-
-      @options = OpenStruct.new(defaults.merge(opts))
-
-      if @options.max_age and not @options.max_age.is_a?(Numeric)
-        raise Exceptions::ConfigurationError.new "max_age should be an Integer"
-      end
-
+      @options = Options.new opts
       @connection = Connection.new
     end
 

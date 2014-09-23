@@ -29,7 +29,7 @@ describe NightcrawlerSwift do
   end
 
   describe "::configure" do
-    it "creates the options struct with the given values" do
+    it "creates the options with the given values" do
       subject.configure opts
       expect(subject.options).to_not be_nil
       opts.keys.each do |key|
@@ -41,48 +41,6 @@ describe NightcrawlerSwift do
       expect(NightcrawlerSwift::Connection).to receive(:new).and_call_original
       subject.configure opts
       expect(subject.connection).to_not be_nil
-    end
-
-    context "verify_ssl" do
-      it "defauts to false" do
-        expect(subject.options.verify_ssl).to eql false
-      end
-    end
-
-    context "retries" do
-      it "defauts to 5" do
-        expect(subject.options.retries).to eql 5
-      end
-    end
-
-    context "max_retry_time" do
-      it "defauts to 30" do
-        expect(subject.options.max_retry_time).to eql 30
-      end
-    end
-
-    context "password" do
-      before do
-        expect(ENV).to receive(:[]).with("NSWIFT_PASSWORD").and_return("123")
-      end
-
-      it "can be defined by the ENV variable 'NSWIFT_PASSWORD'" do
-        subject.configure
-        expect(subject.options.password).to eql "123"
-      end
-
-      it "takes the ENV variable in precedence" do
-        subject.configure password: "345"
-        expect(subject.options.password).to eql "123"
-      end
-    end
-
-    context "and max_age isn't an integer" do
-      let(:opts) { {max_age: "a string"} }
-
-      it "raises NightcrawlerSwift::Exceptions::ConfigurationError" do
-        expect { subject.configure(opts) }.to raise_error(NightcrawlerSwift::Exceptions::ConfigurationError)
-      end
     end
   end
 
