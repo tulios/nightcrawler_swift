@@ -265,6 +265,10 @@ list.execute
 # [{"hash": "...", "name": "my_file_path.txt"}, {}, {}, ...]
 ```
 
+This command supports the following parameters: __limit, marker, end_marker, prefix, format, delimiter, path__
+
+Example:
+
 ```ruby
 list = NightcrawlerSwift::List.new
 list.execute prefix: '/some/path'
