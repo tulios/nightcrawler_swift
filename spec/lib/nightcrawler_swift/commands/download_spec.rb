@@ -5,7 +5,7 @@ describe NightcrawlerSwift::Download do
   let(:connection) { NightcrawlerSwift::Connection.new }
   let(:token) { "token" }
   let(:expires_at) { (DateTime.now + 60).to_time }
-  let(:public_url) { "server-url" }
+  let(:internal_url) { "server-url" }
   let(:bucket) { "rogue" }
 
   subject do
@@ -16,7 +16,7 @@ describe NightcrawlerSwift::Download do
     allow(NightcrawlerSwift).to receive(:connection).and_return(connection)
     allow(connection).to receive(:token_id).and_return(token)
     allow(connection).to receive(:expires_at).and_return(expires_at)
-    allow(connection).to receive(:public_url).and_return(public_url)
+    allow(connection).to receive(:internal_url).and_return(internal_url)
     NightcrawlerSwift.configure bucket: bucket
   end
 
@@ -34,7 +34,7 @@ describe NightcrawlerSwift::Download do
         allow(subject).to receive(:get).and_return(response)
       end
 
-      it "gets using public url" do
+      it "gets using internal url" do
         execute
         expect(subject).to have_received(:get).with("server-url/#{bucket}/file_path")
       end
