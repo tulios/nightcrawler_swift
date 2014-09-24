@@ -97,6 +97,11 @@ describe NightcrawlerSwift::Connection do
         expect(subject.public_url).to eql(auth_success_json["access"]["serviceCatalog"].first["endpoints"].first["publicURL"])
       end
 
+      it "stores the internal_url" do
+        subject.connect!
+        expect(subject.internal_url).to eql(auth_success_json["access"]["serviceCatalog"].first["endpoints"].first["internalURL"])
+      end
+
       it "returns self" do
         expect(subject.connect!).to eql(subject)
       end

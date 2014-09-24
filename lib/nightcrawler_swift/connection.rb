@@ -1,7 +1,7 @@
 module NightcrawlerSwift
   class Connection
     attr_accessor :auth_response
-    attr_reader :token_id, :expires_at, :catalog, :admin_url, :upload_url, :public_url
+    attr_reader :token_id, :expires_at, :catalog, :admin_url, :upload_url, :public_url, :internal_url
 
     def connect!
       authenticate!
@@ -65,6 +65,7 @@ module NightcrawlerSwift
     def configure_urls
       @admin_url = opts.admin_url || @endpoints["adminURL"]
       @public_url = opts.public_url || @endpoints["publicURL"]
+      @internal_url = opts.internal_url || @endpoints["internalURL"]
       @upload_url = "#{@admin_url}/#{opts.bucket}"
     end
   end

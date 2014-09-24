@@ -6,7 +6,7 @@ module NightcrawlerSwift
         raise Exceptions::ValidationError.new "Download command requires a path parameter"
       end
 
-      response = get "#{connection.public_url}/#{options.bucket}/#{path}"
+      response = get "#{connection.internal_url}/#{options.bucket}/#{path}"
       response.body
     end
 
