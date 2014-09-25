@@ -1,13 +1,15 @@
 # Changelog
 
-## 0.6.0 (work in progress)
+## 0.6.0
 
   - Upload command allows a custom max-age (issue #23)
   - List command allows the following parameters: ```limit```, ```marker```, ```end_marker```, ```prefix```, ```format```, ```delimiter``` and ```path``` (issue #22)
+  - Download command uses the internal_url by default (issue #25)
   - CLI now supports a ```--max-age``` to override the default max_age
   - Included ```Expires``` header to upload command based on max_age configuration (issue #9)
   - The _password_ option can be defined by the env variable ```NSWIFT_PASSWORD``` (issue #21)
   - Support for SSL Client Certificates through the options: ```ssl_client_cert```, ```ssl_client_key``` and ```ssl_ca_file```
+  - Configurable ```internal_url```
 
 ## 0.5.0
 

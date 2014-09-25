@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    nightcrawler_swift (0.5.0)
+    nightcrawler_swift (0.6.0)
       multi_mime (>= 1.0.1)
       rest-client
 
