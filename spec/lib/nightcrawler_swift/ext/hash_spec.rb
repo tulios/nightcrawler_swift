@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe NightcrawlerSwift::Hash do
+describe NightcrawlerSwift::Ext::Hash do
 
   subject do
     {"key1" => "value1", "key2" => "value2"}
