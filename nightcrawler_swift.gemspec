@@ -25,5 +25,10 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake"
   spec.add_development_dependency "rspec"
   spec.add_development_dependency "codeclimate-test-reporter"
-  spec.add_development_dependency "byebug"
+
+  if RUBY_VERSION =~ /1\.9/
+    spec.add_development_dependency "debugger"
+  else
+    spec.add_development_dependency "byebug"
+  end
 end
