@@ -112,7 +112,9 @@ describe NightcrawlerSwift::CLI::Runner do
 
         expect(connection).to receive(:configure).and_call_original
         subject.run
-        expect(connection.auth_response).to eql(OpenStruct.new(connection_success_json))
+        # This test uses 'eq' instead of 'eql' because in Ruby 1.9.x the method
+        # 'equal?' is different than '==' making this test fail
+        expect(connection.auth_response).to eq(OpenStruct.new(connection_success_json))
       end
     end
 

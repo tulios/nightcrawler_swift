@@ -63,7 +63,9 @@ describe NightcrawlerSwift::Connection do
 
       it "stores the auth_response" do
         subject.connect!
-        expect(subject.auth_response).to eql(OpenStruct.new(auth_success_json))
+        # This test uses 'eq' instead of 'eql' because in Ruby 1.9.x the method
+        # 'equal?' is different than '==' making this test fail
+        expect(subject.auth_response).to eq(OpenStruct.new(auth_success_json))
       end
 
       it "stores the token id" do
