@@ -33,6 +33,7 @@ module NightcrawlerSwift::CLI
       @options.configured = true
       @options.default_config_file = true
       @options.config_file = File.expand_path(File.join(user_home_dir, CONFIG_FILE))
+      @options.use_cache = true
       @options.cache_file = File.expand_path(File.join(user_home_dir, CACHE_FILE))
       @options.config_hash = {}
     end
@@ -79,17 +80,23 @@ module NightcrawlerSwift::CLI
     def connect_and_execute &block
       path = options.cache_file
       if File.exist?(path)
-        hash = JSON.parse File.read(path)
-        NightcrawlerSwift.connection.auth_response = OpenStruct.new(hash)
-        NightcrawlerSwift.connection.configure
+        unless @options.use_cache
+          File.delete path
+          
+        else
+          hash = JSON.parse File.read(path)
+          NightcrawlerSwift.connection.auth_response = OpenStruct.new(hash)
+          NightcrawlerSwift.connection.configure
 
-        token_id = NightcrawlerSwift.connection.token_id
-        NightcrawlerSwift.logger.debug "Cache found, restablishing connection with token_id: #{token_id}"
+          token_id = NightcrawlerSwift.connection.token_id
+          NightcrawlerSwift.logger.debug "Cache found, restablishing connection with token_id: #{token_id}"
+        end
       end
 
       begin
         block.call
       ensure
+        return unless @options.use_cache
         File.open(path, "w") do |f|
           f.write(NightcrawlerSwift.connection.auth_response.to_h.to_json)
         end

@@ -63,7 +63,12 @@ describe NightcrawlerSwift::CLI::Runner do
       expect(subject.options.config_file).to eql File.expand_path(path)
     end
 
-    it "points to a cache file in the uder home dir" do
+    it "enables the use of cache" do
+      subject.run
+      expect(subject.options.use_cache).to eql true
+    end
+
+    it "points to a cache file in the user home dir" do
       subject.run
       path = File.join(config_dir, NightcrawlerSwift::CLI::CACHE_FILE)
       expect(subject.options.cache_file).to eql File.expand_path(path)
@@ -145,6 +150,30 @@ describe NightcrawlerSwift::CLI::Runner do
         allow(subject).to receive(:parse_parameters) { subject.options.config_hash[:max_age] = max_age }
         subject.run
         expect(NightcrawlerSwift.options.max_age).to eql max_age
+      end
+    end
+
+    context "with no-cache flag" do
+      before do
+        subject.send :configure_default_options
+        expect(subject.options.use_cache).to eql true
+        allow(subject).to receive(:parse_parameters) { subject.options.use_cache = false }
+      end
+
+      it "doesn't write the auth_response into cache file" do
+        expect(File.exist?(cache_file)).to eql false
+        allow(connection).to receive(:auth_response).and_return(OpenStruct.new(connection_success_json))
+        subject.run
+        expect(File.exist?(cache_file)).to eql false
+      end
+
+      it "removes the cache file if it exists" do
+        expect(File.exist?(cache_file)).to eql false
+        allow(connection).to receive(:auth_response).and_return(OpenStruct.new(connection_success_json))
+        File.open(cache_file, "w") {|f| f.write(connection_success_json.to_json)}
+        expect(File.exist?(cache_file)).to eql true
+        subject.run
+        expect(File.exist?(cache_file)).to eql false
       end
     end
 

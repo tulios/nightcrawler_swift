@@ -131,6 +131,16 @@ describe NightcrawlerSwift::CLI::OptParser do
         end
       end
     end
+
+    ["--no-cache"].each do |switch|
+      context switch do
+        it "configures use_cache with false" do
+          allow(runner).to receive(:argv).and_return([switch])
+          subject.parse!
+          expect(runner.options.use_cache).to eql false
+        end
+      end
+    end
   end
 
   describe "#parse!" do

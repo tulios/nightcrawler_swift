@@ -36,6 +36,7 @@ module NightcrawlerSwift::CLI
       configure_option_bucket
       configure_option_max_age
       configure_option_config
+      configure_option_no_cache
       configure_option_help
       configure_option_version
     end
@@ -70,6 +71,12 @@ module NightcrawlerSwift::CLI
         @runner.log "Using custom config file at: #{path}"
         @runner.options.config_file = path
         @runner.options.default_config_file = false
+      end
+    end
+
+    def configure_option_no_cache
+      @parser.on_tail("--no-cache", "Avoids the connection cache. It also clears the cache if it exists") do
+        @runner.options.use_cache = false
       end
     end
 
