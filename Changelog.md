@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.7.0
+
+  - CLI now supports ```--no-cache``` which ignores the cached connection and removes the cache file if it exists (issue #12)
+  - Bugfix: invalidate nswift_cache when the connection fail (issue #27)
+  - Bugfix: OpenStruct in Ruby 1.9.x doesn't have the method [], using 'send' instead
+  - Bugfix: OpenStruct and nil doesn't have the method to_h in Ruby 1.9.x
+
 ## 0.6.0
 
   - Upload command allows a custom max-age (issue #23)
