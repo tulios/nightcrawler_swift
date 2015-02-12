@@ -207,6 +207,18 @@ describe NightcrawlerSwift::CLI::Runner do
       end
     end
 
+    context "when there is an error with connection cache" do
+      it "removes the cache file if it exists and allows the creation of a new one" do
+        expect(File.exist?(cache_file)).to eql false
+        allow(connection).to receive(:auth_response).and_return(OpenStruct.new(connection_success_json))
+        File.open(cache_file, "w") {|f| f.write("null")}
+        expect(File.exist?(cache_file)).to eql true
+        subject.run
+        expect(File.exist?(cache_file)).to eql true
+        expect(File.read(cache_file)).to eql connection_success_json.to_json
+      end
+    end
+
     context "when rescue Errno::ENOENT" do
       before do
         NightcrawlerSwift.logger = Logger.new(StringIO.new)

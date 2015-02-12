@@ -80,17 +80,7 @@ module NightcrawlerSwift::CLI
     def connect_and_execute &block
       path = options.cache_file
       if File.exist?(path)
-        unless @options.use_cache
-          File.delete path
-          
-        else
-          hash = JSON.parse File.read(path)
-          NightcrawlerSwift.connection.auth_response = OpenStruct.new(hash)
-          NightcrawlerSwift.connection.configure
-
-          token_id = NightcrawlerSwift.connection.token_id
-          NightcrawlerSwift.logger.debug "Cache found, restablishing connection with token_id: #{token_id}"
-        end
+        @options.use_cache ? restore_connection(path) : File.delete(path)
       end
 
       begin
@@ -100,6 +90,21 @@ module NightcrawlerSwift::CLI
         File.open(path, "w") do |f|
           f.write(NightcrawlerSwift.connection.auth_response.to_h.to_json)
         end
+      end
+    end
+
+    def restore_connection cache_path
+      begin
+        hash = JSON.parse File.read(cache_path)
+        NightcrawlerSwift.connection.auth_response = OpenStruct.new(hash)
+        NightcrawlerSwift.connection.configure
+
+        token_id = NightcrawlerSwift.connection.token_id
+        NightcrawlerSwift.logger.debug "Cache found, restablishing connection with token_id: #{token_id}"
+
+      rescue
+        log "Failed to restore connection, removing cache"
+        File.delete cache_path
       end
     end
 
