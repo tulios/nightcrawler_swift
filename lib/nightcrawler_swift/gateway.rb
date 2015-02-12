@@ -62,7 +62,10 @@ module NightcrawlerSwift
         :ssl_ca_file
 
       ].inject({}) {|hash, key|
-        hash.tap {hash[key] = options[key]}
+        hash.tap {
+          # OpenStruct in Ruby 1.9.x doesn't have the method []
+          hash[key] = options.send(key)
+        }
       }.compact
     end
 
