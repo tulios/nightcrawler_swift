@@ -15,7 +15,7 @@ describe NightcrawlerSwift::Command do
   end
 
   let(:connection) { NightcrawlerSwift::Connection.new }
-  let(:restclient) { double(:restclient, put: response, get: response, delete: response) }
+  let(:restclient) { double(:restclient, put: response, get: response, head: response, delete: response) }
   let(:response) { double(:response) }
   let(:url) { "http://url-com" }
   let(:token) { "token" }
@@ -25,6 +25,33 @@ describe NightcrawlerSwift::Command do
     it "creates a new gateway with the url" do
       expect(NightcrawlerSwift::Gateway).to receive(:new).with(url).and_call_original
       execute_http
+    end
+  end
+
+  shared_examples "standard http method" do
+    let :execute_http do
+      subject.send http_verb, url, body: 'ignore_me', headers: { content_type: :json }, params: { b: 2 }
+    end
+
+    it_behaves_like "command with configured gateway"
+
+    it "ignores body" do
+      execute_http
+      expect(restclient).to have_received(http_verb).with(kind_of(Hash))
+    end
+
+    it "sends headers with token" do
+      execute_http
+      expect(restclient).to have_received(http_verb).with(hash_including({ content_type: :json, "X-Storage-Token" => token }))
+    end
+
+    it "sends params" do
+      execute_http
+      expect(restclient).to have_received(http_verb).with(hash_including(params: { b: 2 }))
+    end
+
+    it "returns RestClient response" do
+      expect(execute_http).to eql(response)
     end
   end
 
@@ -59,57 +86,18 @@ describe NightcrawlerSwift::Command do
   end
 
   describe "#get" do
-    let :execute_http do
-      subject.send :get, url, body: 'ignore_me', headers: { content_type: :json }, params: { b: 2 }
-    end
+    let(:http_verb) { :get }
+    it_behaves_like "standard http method"
+  end
 
-    it_behaves_like "command with configured gateway"
-
-    it "ignores body" do
-      execute_http
-      expect(restclient).to have_received(:get).with(kind_of(Hash))
-    end
-
-    it "sends headers with token" do
-      execute_http
-      expect(restclient).to have_received(:get).with(hash_including({ content_type: :json, "X-Storage-Token" => token }))
-    end
-
-    it "sends params" do
-      execute_http
-      expect(restclient).to have_received(:get).with(hash_including(params: { b: 2 }))
-    end
-
-    it "returns RestClient response" do
-      expect(execute_http).to eql(response)
-    end
+  describe "#head" do
+    let(:http_verb) { :head }
+    it_behaves_like "standard http method"
   end
 
   describe "#delete" do
-    let :execute_http do
-      subject.send :delete, url, body: 'ignore_me', headers: { content_type: :json }, params: { b: 2 }
-    end
-
-    it_behaves_like "command with configured gateway"
-
-    it "ignores body" do
-      execute_http
-      expect(restclient).to have_received(:delete).with(kind_of(Hash))
-    end
-
-    it "sends headers with token" do
-      execute_http
-      expect(restclient).to have_received(:delete).with(hash_including({ content_type: :json, "X-Storage-Token" => token }))
-    end
-
-    it "sends params" do
-      execute_http
-      expect(restclient).to have_received(:delete).with(hash_including(params: { b: 2 }))
-    end
-
-    it "returns RestClient response" do
-      expect(execute_http).to eql(response)
-    end
+    let(:http_verb) { :delete }
+    it_behaves_like "standard http method"
   end
 
   describe "#put" do
