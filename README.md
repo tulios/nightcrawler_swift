@@ -275,6 +275,37 @@ list.execute prefix: '/some/path'
 # [{"hash": "...", "name": "/some/path/with/my_file_path.txt"}, {}, {}, ...]
 ```
 
+### Metadata
+
+```ruby
+metadata = NightcrawlerSwift::Metadata.new
+metadata.execute "my_file.css"
+# {
+#   :date=>"Tue, 31 Mar 2015 01:46:10 GMT",
+#   :content_type=>"text/css",
+#   :content_length=>"50013",
+#   :last_modified=>"Wed, 15 Oct 2014 13:38:56 GMT",
+#   :etag=>"e13839c545f32be23b942a41f3ea7724",
+#   :x_timestamp=>"1413380335.38118",
+#   :cache_control=>"public, max-age=604800",
+#   :x_trans_id=>"tx92ca1becd1a74fa3ae1f2-005519fc62"
+# }
+
+# Consulting the bucket/container metadata
+metadata.execute
+# {
+#   :date=>"Tue, 31 Mar 2015 01:41:25 GMT",
+#   :content_type=>"application/xml; charset=utf-8",
+#   :content_length=>"98171",
+#   :x_container_object_count=>"374",
+#   :x_storage_policy=>"default-3x",
+#   :x_container_read=>".r:*",
+#   :x_container_bytes_used=>"7171468",
+#   :x_timestamp=>"1409750420.36261",
+#   :x_trans_id=>"tx17d8c66ab746436b8b7b6-005519fb40"
+# }
+```
+
 ### Delete
 
 ```ruby

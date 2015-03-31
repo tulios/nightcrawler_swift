@@ -25,8 +25,8 @@ module NightcrawlerSwift
       :delete
     ].each do |http_verb|
       define_method http_verb do |*method_args|
-        url = method_args.first
-        args = method_args.last || {}
+        url = method_args[0]
+        args = method_args[1] || {}
 
         prepare_args args
         Gateway.new(url).request {|r| r.send(http_verb, headers_and_params(args))}
