@@ -212,6 +212,19 @@ $ nswift delete <swift_path> # nswift delete assets/robots.txt
 ```sh
 $ nswift url-for <swift_path> # nswift url-for assets/robots.txt
 ```
+```sh
+$ nswift metadata <swift_path>
+# {
+#   "date": "Tue, 31 Mar 2015 02:10:40 GMT",
+#   "content_type": "text/css",
+#   "content_length": "50013",
+#   "last_modified": "Wed, 15 Oct 2014 13:38:56 GMT",
+#   "etag": "e13839c545f32be23b942a41f3ea7724",
+#   "x_timestamp": "1413380335.38118",
+#   "cache_control": "public, max-age=604800",
+#   "x_trans_id": "tx824d632ef9e54685a7563-005519f838"
+# }
+```
 
 For any commands you could provide a different configuration file through the _-c_/_--config_ switch, as:
 

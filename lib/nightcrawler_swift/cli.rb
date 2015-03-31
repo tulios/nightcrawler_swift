@@ -32,6 +32,11 @@ module NightcrawlerSwift
         command: NightcrawlerSwift::Delete
       },
 
+      "metadata" => {
+        description: "Returns the object metadata in JSON format. Without <swift_path> returns the bucket/container metadata. Ex: nswift metadata assets/robots.txt",
+        command: NightcrawlerSwift::Metadata
+      },
+
       "url-for" => {
         description: "Returns the public url of an object. Format: nswift url-for <swift_path> Ex: nswift url-for robots.txt",
         command: NightcrawlerSwift::CLI::UrlFor

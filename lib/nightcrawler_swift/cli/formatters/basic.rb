@@ -30,6 +30,12 @@ module NightcrawlerSwift::CLI
         @runner.log(deleted ? "success" : "failure")
       end
 
+      def command_metadata command
+        filepath = @runner.argv.first
+        metadata = command.new.execute(filepath)
+        @runner.log JSON.pretty_generate(metadata)
+      end
+
       def command_url_for command
         filepath = @runner.argv.first
         @runner.log command.new.execute(filepath)

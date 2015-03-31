@@ -100,6 +100,24 @@ describe NightcrawlerSwift::CLI::Formatters::Basic do
     end
   end
 
+  describe "#command_metadata" do
+    let :command_class do
+      NightcrawlerSwift::Metadata
+    end
+
+    let :metadata do
+      {some_metadata: true}
+    end
+
+    it "returns the metadata of the given path" do
+      expect(command_class).to receive(:new).and_return(command)
+      expect(command).to receive(:execute).with(filepath).and_return(metadata)
+      expect(runner).to receive(:log).with(JSON.pretty_generate(metadata))
+      expect(runner).to receive(:argv).and_return([filepath])
+      subject.command_metadata command_class
+    end
+  end
+
   describe "#command_url_for" do
     let :command_class do
       NightcrawlerSwift::CLI::UrlFor
