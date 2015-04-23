@@ -21,6 +21,7 @@ require "nightcrawler_swift/commands/metadata"
 require "nightcrawler_swift/commands/list"
 require "nightcrawler_swift/commands/delete"
 require "nightcrawler_swift/commands/sync"
+require "nightcrawler_swift/commands/multithread_sync"
 require "nightcrawler_swift/railtie" if defined?(Rails)
 
 module NightcrawlerSwift
