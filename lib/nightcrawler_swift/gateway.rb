@@ -59,7 +59,8 @@ module NightcrawlerSwift
         :verify_ssl,
         :ssl_client_cert,
         :ssl_client_key,
-        :ssl_ca_file
+        :ssl_ca_file,
+        :ssl_version
 
       ].inject({}) {|hash, key|
         hash.tap {

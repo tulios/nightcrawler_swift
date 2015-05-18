@@ -81,6 +81,22 @@ describe NightcrawlerSwift::Gateway do
         end
       end
 
+      context "but only 'ssl_version'" do
+        let :opts do
+          {ssl_version: 'sslversion'}
+        end
+
+        it "uses the configured option" do
+          expect(RestClient::Resource).to receive(:new).with(
+            url,
+            timeout: NightcrawlerSwift.options.timeout,
+            verify_ssl: NightcrawlerSwift.options.verify_ssl,
+            ssl_version: NightcrawlerSwift.options.ssl_version
+          )
+          subject
+        end
+      end
+
       context "using all options" do
         let :opts do
           {
