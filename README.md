@@ -74,6 +74,9 @@ config.nightcrawler_swift.ssl_client_key =
 
 # default: nil
 config.nightcrawler_swift.ssl_ca_file = "ca_certificate.pem"
+
+#default: nil
+config.nightcrawler_swift.ssl_version = "SSLv23"
 ```
 
 By default it will use ```Rails.logger``` as logger, to change that use a different logger in configurations, like:
