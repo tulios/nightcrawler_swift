@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.8.0
+
+  - Added support for ssl_version configuration
+  - Command for object metadata. Available for cli (closes #16, #17)
+
 ## 0.7.0
 
   - CLI now supports ```--no-cache``` which ignores the cached connection and removes the cache file if it exists (issue #12)
