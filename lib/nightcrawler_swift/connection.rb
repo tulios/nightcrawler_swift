@@ -1,7 +1,19 @@
 module NightcrawlerSwift
   class Connection
+    def self.connected_attr_reader(*args)
+      args.each do |arg|
+        define_method(arg.to_sym) do
+          connect! unless connected?
+          instance_variable_get("@#{arg}")
+        end
+      end
+    end
+
+    private_class_method :connected_attr_reader
+
     attr_writer :auth_response
-    attr_reader :token_id, :expires_at, :catalog, :admin_url, :upload_url, :public_url, :internal_url
+    attr_reader :token_id, :expires_at
+    connected_attr_reader :catalog, :admin_url, :upload_url, :public_url, :internal_url
 
     def auth_response
       authenticate! if @auth_response.nil?
@@ -63,8 +75,8 @@ module NightcrawlerSwift
     end
 
     def select_endpoints
-      raise Exceptions::ConfigurationError.new "No catalog of type 'object-store' found" if catalog.nil?
-      @endpoints = catalog["endpoints"].first
+      raise Exceptions::ConfigurationError.new "No catalog of type 'object-store' found" if @catalog.nil?
+      @endpoints = @catalog["endpoints"].first
     end
 
     def configure_urls
