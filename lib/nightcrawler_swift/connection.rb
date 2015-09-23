@@ -1,7 +1,12 @@
 module NightcrawlerSwift
   class Connection
-    attr_accessor :auth_response
+    attr_writer :auth_response
     attr_reader :token_id, :expires_at, :catalog, :admin_url, :upload_url, :public_url, :internal_url
+
+    def auth_response
+      authenticate! if @auth_response.nil?
+      @auth_response
+    end
 
     def connect!
       authenticate!

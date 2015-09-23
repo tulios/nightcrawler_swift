@@ -100,13 +100,14 @@ describe NightcrawlerSwift::CLI::Runner do
     end
 
     before do
+      allow(connection).to receive(:authenticate!)
       allow(formatter).to receive(command_method)
       allow(NightcrawlerSwift).to receive(:connection).and_return(connection)
       File.open(config_file, "w") {|f| f.write(opts.to_json)}
     end
 
     it "configures NightcrawlerSwift" do
-      expect(NightcrawlerSwift).to receive(:configure).with opts.symbolize_keys
+      expect(NightcrawlerSwift).to receive(:configure).with(opts.symbolize_keys).and_call_original
       subject.run
     end
 
