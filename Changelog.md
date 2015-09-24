@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.8.1
+
+  - Ensure connected on url getters `catalog, admin_url, upload_url, public_url, internal_url` (pull request #28)
+
 ## 0.8.0
 
   - Added support for ssl_version configuration

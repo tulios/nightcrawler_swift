@@ -370,6 +370,16 @@ NightcrawlerSwift.configure tenant_name: "rogue"
 NightcrawlerSwift.options.tenant_name # "rogue"
 ```
 
+## Contributors
+
+Check it out!
+
+https://github.com/tulios/nightcrawler_swift/graphs/contributors
+
+## License
+
+See [LICENSE](https://github.com/tulios/nightcrawler_swift/blob/master/LICENSE.txt) for more details.
+
 ## Contributing
 
 1. Fork it ( https://github.com/tulios/nightcrawler_swift/fork )
