@@ -105,6 +105,7 @@ module NightcrawlerSwift::CLI
       rescue
         log "Failed to restore connection, removing cache"
         File.delete cache_path
+        NightcrawlerSwift.connection.auth_response = nil
       end
     end
 

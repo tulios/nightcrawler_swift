@@ -80,27 +80,28 @@ describe NightcrawlerSwift::Connection do
       end
 
       it "stores the catalog" do
-        subject.connect!
+        expect(subject).to receive(:connect!).and_call_original
         expect(subject.catalog).to eql(auth_success_json["access"]["serviceCatalog"][0])
       end
 
       it "stores the admin_url" do
-        subject.connect!
+        expect(subject).to receive(:connect!).and_call_original
         expect(subject.admin_url).to eql(auth_success_json["access"]["serviceCatalog"].first["endpoints"].first["adminURL"])
       end
 
       it "stores the upload_url" do
-        subject.connect!
-        expect(subject.upload_url).to eql("#{subject.admin_url}/#{opts[:bucket]}")
+        admin_url = subject.admin_url
+        expect(subject).to receive(:connect!).and_call_original
+        expect(subject.upload_url).to eql("#{admin_url}/#{opts[:bucket]}")
       end
 
       it "stores the public_url" do
-        subject.connect!
+        expect(subject).to receive(:connect!).and_call_original
         expect(subject.public_url).to eql(auth_success_json["access"]["serviceCatalog"].first["endpoints"].first["publicURL"])
       end
 
       it "stores the internal_url" do
-        subject.connect!
+        expect(subject).to receive(:connect!).and_call_original
         expect(subject.internal_url).to eql(auth_success_json["access"]["serviceCatalog"].first["endpoints"].first["internalURL"])
       end
 
