@@ -154,6 +154,21 @@ describe NightcrawlerSwift::CLI::Runner do
       end
     end
 
+    context "with a custom content-encoding" do
+      let(:content_encoding) { 'gzip' }
+
+      before do
+        subject.send :configure_default_options
+        expect(subject.options.config_hash).to eql({})
+      end
+
+      it "sets the content-encoding" do
+        allow(subject).to receive(:parse_parameters) { subject.options.config_hash[:content_encoding] = content_encoding }
+        subject.run
+        expect(NightcrawlerSwift.options.content_encoding).to eql content_encoding
+      end
+    end
+
     context "with no-cache flag" do
       before do
         subject.send :configure_default_options

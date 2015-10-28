@@ -111,6 +111,23 @@ describe NightcrawlerSwift::Upload do
       end
     end
 
+    context "content_encoding" do
+      let :default_headers do
+        {content_type: "text/css", etag: etag}
+      end
+
+      it "allows custom content_encoding" do
+        NightcrawlerSwift.configure
+        subject.execute path, file, content_encoding: 'gzip'
+        expect(subject).to have_received(:put).with(
+          anything,
+          hash_including(
+            headers: hash_including(content_encoding: "gzip")
+          )
+        )
+      end
+    end
+
     context "when response code is 200" do
       let(:response) { double(:response, code: 200) }
       it { expect(execute).to be true }

@@ -35,6 +35,7 @@ module NightcrawlerSwift::CLI
       @parser.separator "options:"
       configure_option_bucket
       configure_option_max_age
+      configure_option_content_encoding
       configure_option_config
       configure_option_no_cache
       configure_option_help
@@ -56,6 +57,15 @@ module NightcrawlerSwift::CLI
         max_age = value.strip.to_i
         @runner.options.config_hash[:max_age] = max_age
         @runner.log "Using max_age: #{max_age}"
+      end
+    end
+
+    def configure_option_content_encoding
+      desc = "Custom content-encoding value"
+      @parser.on("--content-encoding=VALUE", String, desc) do |value|
+        content_encoding = value.to_s
+        @runner.options.config_hash[:content_encoding] = content_encoding
+        @runner.log "Using content-encoding: #{content_encoding}"
       end
     end
 
