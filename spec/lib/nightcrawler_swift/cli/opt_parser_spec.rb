@@ -132,6 +132,20 @@ describe NightcrawlerSwift::CLI::OptParser do
       end
     end
 
+    ["--content-encoding=VALUE"].each do |switch|
+      context switch do
+        let(:content_encoding) { 'gzip' }
+        let(:command) { switch.gsub(/VALUE/, content_encoding) }
+
+        it "configures the content-encoding" do
+          allow(runner).to receive(:argv).and_return([command])
+          allow(runner).to receive(:log)
+          subject.parse!
+          expect(runner.options.config_hash).to include(content_encoding: content_encoding)
+        end
+      end
+    end
+
     ["--no-cache"].each do |switch|
       context switch do
         it "configures use_cache with false" do
