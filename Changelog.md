@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.9.0
+
+  - Added support for content-encoding option
+  - CLI also supports --content-encoding option
+
 ## 0.8.1
 
   - Ensure connected on url getters `catalog, admin_url, upload_url, public_url, internal_url` (pull request #28)
