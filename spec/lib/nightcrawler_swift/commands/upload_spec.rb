@@ -111,6 +111,23 @@ describe NightcrawlerSwift::Upload do
       end
     end
 
+    context "custom_headers" do
+      let :default_headers do
+        {content_type: "text/css", etag: etag}
+      end
+
+      it "allows custom headers" do
+        NightcrawlerSwift.configure
+        subject.execute path, file, custom_headers: {custom_key: 'custom_value'}
+        expect(subject).to have_received(:put).with(
+          anything,
+          hash_including(
+            headers: hash_including(default_headers.merge(custom_key: 'custom_value'))
+          )
+        )
+      end
+    end
+
     context "content_encoding" do
       let :default_headers do
         {content_type: "text/css", etag: etag}
