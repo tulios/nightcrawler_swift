@@ -11,6 +11,9 @@ module NightcrawlerSwift
       content_encoding = opts[:content_encoding] || options.content_encoding
       headers.merge!(content_encoding: content_encoding.to_s) if content_encoding
 
+      custom_headers = opts[:custom_headers]
+      headers.merge!(custom_headers) if custom_headers
+
       response = put "#{connection.upload_url}/#{path}", body: body, headers: headers
       [200, 201].include?(response.code)
     end

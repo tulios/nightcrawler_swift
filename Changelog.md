@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.10.0
+
+  - Added support for custom headers
+
 ## 0.9.0
 
   - Added support for content-encoding option
