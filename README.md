@@ -77,6 +77,9 @@ config.nightcrawler_swift.ssl_ca_file = "ca_certificate.pem"
 
 #default: nil
 config.nightcrawler_swift.ssl_version = "SSLv23"
+
+#default: {}
+config.nightcrawler_swift.custom_headers = {custom_header: 'custom_value'}
 ```
 
 By default it will use ```Rails.logger``` as logger, to change that use a different logger in configurations, like:
@@ -102,6 +105,10 @@ The number of times to retry the request before failing. To disable this feature
 > max_retry_time
 
 Maximum delay in seconds between each retry. The delay will start with 1s and will double for each retry until this value.
+
+> custom_headers
+
+Optional hash with header fields to be uploaded with the object.
 
 #### 2) Profit!
 
@@ -159,6 +166,9 @@ ssl_client_key:
 
 # default: nil
 ssl_ca_file: "ca_certificate.pem"
+
+# default: {}
+custom_headers: {custom_header: 'custom_value'}
 ```
 
 By default it will use ```Logger.new(STDOUT)``` as logger, to change that use:
