@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    nightcrawler_swift (0.10.0)
+    nightcrawler_swift (0.10.1)
       concurrent-ruby (~> 0.8.0)
       multi_mime (>= 1.0.1)
       rest-client
