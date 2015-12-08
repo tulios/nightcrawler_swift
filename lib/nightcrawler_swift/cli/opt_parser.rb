@@ -36,6 +36,7 @@ module NightcrawlerSwift::CLI
       configure_option_bucket
       configure_option_max_age
       configure_option_content_encoding
+      configure_option_expires
       configure_option_config
       configure_option_no_cache
       configure_option_help
@@ -66,6 +67,15 @@ module NightcrawlerSwift::CLI
         content_encoding = value.to_s
         @runner.options.config_hash[:content_encoding] = content_encoding
         @runner.log "Using content-encoding: #{content_encoding}"
+      end
+    end
+
+    def configure_option_expires
+      desc = "Custom expires header value"
+      @parser.on("--expires=VALUE", String, desc) do |value|
+        expires = Time.parse(value)
+        @runner.options.config_hash[:expires] = expires
+        @runner.log "Using expires: #{expires}"
       end
     end
 
