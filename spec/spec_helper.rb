@@ -2,6 +2,7 @@ require "codeclimate-test-reporter"
 CodeClimate::TestReporter.start
 
 require "rake"
+require "timecop"
 RUBY_VERSION =~ /1\.9/ ? require("debugger") : require("byebug")
 require "nightcrawler_swift"
 

@@ -8,6 +8,9 @@ module NightcrawlerSwift
       max_age = opts[:max_age] || options.max_age
       headers.merge!(cache_control: "public, max-age=#{max_age}") if max_age
 
+      expires = opts[:expires]
+      headers.merge!(expires: CGI.rfc1123_date(expires)) if expires
+
       content_encoding = opts[:content_encoding] || options.content_encoding
       headers.merge!(content_encoding: content_encoding.to_s) if content_encoding
 

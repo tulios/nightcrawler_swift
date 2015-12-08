@@ -113,6 +113,28 @@ describe NightcrawlerSwift::Upload do
       end
     end
 
+    context "expires" do
+      let :default_headers do
+        {content_type: "text/css", etag: etag}
+      end
+      let(:timestamp) { "Tue, 08 Dec 2015 17:03:31 GMT" }
+
+      it "allows custom content_encoding" do
+        time = Time.parse(timestamp)
+
+        Timecop.freeze(time) do
+          NightcrawlerSwift.configure
+          subject.execute path, file, expires: time
+          expect(subject).to have_received(:put).with(
+            anything,
+            hash_including(
+              headers: hash_including(expires: timestamp)
+            )
+          )
+        end
+      end
+    end
+
     context "content_encoding" do
       let :default_headers do
         {content_type: "text/css", etag: etag}
