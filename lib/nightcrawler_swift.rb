@@ -1,4 +1,3 @@
-require "cgi"
 require "date"
 require "json"
 require "logger"
