@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    nightcrawler_swift (0.10.0)
+    nightcrawler_swift (0.11.0)
       concurrent-ruby (~> 0.8.0)
       multi_mime (>= 1.0.1)
       rest-client
@@ -48,6 +48,7 @@ GEM
       simplecov-html (~> 0.8.0)
     simplecov-html (0.8.0)
     slop (3.6.0)
+    timecop (0.8.0)
 
 PLATFORMS
   ruby
@@ -59,3 +60,4 @@ DEPENDENCIES
   nightcrawler_swift!
   rake
   rspec
+  timecop
