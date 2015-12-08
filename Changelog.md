@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.10.1
+
+  - Exclude ```Expires``` header
+
 ## 0.10.0
 
   - Added support for custom headers
