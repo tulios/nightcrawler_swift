@@ -1,8 +1,9 @@
 # Changelog
 
-## 0.10.1
+## 0.11.0
 
-  - Exclude ```Expires``` header
+  - Exclude ```Expires``` header when max-age used
+  - Add ```Expires``` header as an independent option
 
 ## 0.10.0
 

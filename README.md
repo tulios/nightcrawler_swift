@@ -94,6 +94,10 @@ config.nightcrawler_swift.logger = Logger.new(STDOUT)
 
 Defines the *Cache-Control:max-age=<value>* header.
 
+> expires
+
+Defines the *Expires* header.
+
 > content_encoding
 
 Defines the *Content-Encoding:<vaule>* header
