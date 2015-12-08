@@ -94,21 +94,6 @@ describe NightcrawlerSwift::Upload do
           )
         )
       end
-
-      it "also sends the expires header based on max_age" do
-        now = Time.now
-        allow(Time).to receive(:now).and_return(now)
-        expires = CGI.rfc1123_date(Time.now + max_age)
-
-        NightcrawlerSwift.configure max_age: max_age
-        execute
-        expect(subject).to have_received(:put).with(
-          anything,
-          hash_including(
-            headers: default_headers.merge(cache_control: "public, max-age=#{max_age}", expires:  expires)
-          )
-        )
-      end
     end
 
     context "custom_headers" do
