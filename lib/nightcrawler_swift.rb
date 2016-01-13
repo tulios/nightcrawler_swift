@@ -26,7 +26,7 @@ require "nightcrawler_swift/railtie" if defined?(Rails)
 module NightcrawlerSwift
   class << self
 
-    attr_accessor :logger
+    attr_writer :logger
     attr_reader :options, :connection
 
     def logger

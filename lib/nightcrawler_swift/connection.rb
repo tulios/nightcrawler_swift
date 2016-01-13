@@ -16,6 +16,7 @@ module NightcrawlerSwift
     connected_attr_reader :catalog, :admin_url, :upload_url, :public_url, :internal_url
 
     def auth_response
+      @auth_response ||= nil
       authenticate! if @auth_response.nil?
       @auth_response
     end
