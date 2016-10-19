@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.11.1
+
+  - Remove "Thread.exclusive is deprecated, use Mutex" warning
+
 ## 0.11.0
 
   - Exclude ```Expires``` header when max-age used
