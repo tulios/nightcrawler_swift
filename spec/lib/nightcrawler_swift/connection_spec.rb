@@ -38,11 +38,14 @@ describe NightcrawlerSwift::Connection do
 
     let :auth_success_response do
       path = File.join(File.dirname(__FILE__), "../..", "fixtures/auth_success.json")
-      OpenStruct.new(body: File.read(File.expand_path(path)))
+      file_contents = File.read(File.expand_path(path))
+      OpenStruct.new(body: JSON.parse(file_contents)["body"].to_json)
     end
 
     let :auth_success_json do
-      JSON.parse(auth_success_response.body)
+      {
+        "body" => JSON.parse(auth_success_response.body)
+      }
     end
 
     describe "when it connects" do
@@ -61,32 +64,33 @@ describe NightcrawlerSwift::Connection do
           and_return(auth_success_response)
       end
 
-      it "stores the auth_response" do
+      it "stores the auth response body" do
         subject.connect!
         # This test uses 'eq' instead of 'eql' because in Ruby 1.9.x the method
         # 'equal?' is different than '==' making this test fail
-        expect(subject.auth_response).to eq(OpenStruct.new(auth_success_json))
+        expect(subject.auth_response.body).to eq(OpenStruct.new(auth_success_json))
       end
 
       it "stores the token id" do
         subject.connect!
-        expect(subject.token_id).to eql(auth_success_json["access"]["token"]["id"])
+        expect(subject.token_id).not_to be_nil
+        expect(subject.token_id).to eql(auth_success_json["body"]["access"]["token"]["id"])
       end
 
       it "stores the expires_at" do
         subject.connect!
-        expires_at = DateTime.parse(auth_success_json["access"]["token"]["expires"]).to_time
+        expires_at = DateTime.parse(auth_success_json["body"]["access"]["token"]["expires"]).to_time
         expect(subject.expires_at).to eql(expires_at)
       end
 
       it "stores the catalog" do
         expect(subject).to receive(:connect!).and_call_original
-        expect(subject.catalog).to eql(auth_success_json["access"]["serviceCatalog"][0])
+        expect(subject.catalog).to eql(auth_success_json["body"]["access"]["serviceCatalog"][0])
       end
 
       it "stores the admin_url" do
         expect(subject).to receive(:connect!).and_call_original
-        expect(subject.admin_url).to eql(auth_success_json["access"]["serviceCatalog"].first["endpoints"].first["adminURL"])
+        expect(subject.admin_url).to eql(auth_success_json["body"]["access"]["serviceCatalog"].first["endpoints"].first["adminURL"])
       end
 
       it "stores the upload_url" do
@@ -97,12 +101,12 @@ describe NightcrawlerSwift::Connection do
 
       it "stores the public_url" do
         expect(subject).to receive(:connect!).and_call_original
-        expect(subject.public_url).to eql(auth_success_json["access"]["serviceCatalog"].first["endpoints"].first["publicURL"])
+        expect(subject.public_url).to eql(auth_success_json["body"]["access"]["serviceCatalog"].first["endpoints"].first["publicURL"])
       end
 
       it "stores the internal_url" do
         expect(subject).to receive(:connect!).and_call_original
-        expect(subject.internal_url).to eql(auth_success_json["access"]["serviceCatalog"].first["endpoints"].first["internalURL"])
+        expect(subject.internal_url).to eql(auth_success_json["body"]["access"]["serviceCatalog"].first["endpoints"].first["internalURL"])
       end
 
       it "returns self" do
@@ -111,7 +115,7 @@ describe NightcrawlerSwift::Connection do
 
       context "and there isn't any catalog configured" do
         before do
-          auth_success_json["access"]["serviceCatalog"] = []
+          auth_success_json["body"]["access"]["serviceCatalog"] = []
           allow(subject).to receive(:auth_response).and_return(OpenStruct.new(auth_success_json))
         end
 
