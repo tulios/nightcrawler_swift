@@ -38,12 +38,13 @@ describe NightcrawlerSwift::Connection do
 
     let :auth_success_response do
       path = File.join(File.dirname(__FILE__), "../..", "fixtures/auth_success.json")
-      file_contents = File.read(File.expand_path(path))
-      OpenStruct.new(body: JSON.parse(file_contents)["body"].to_json)
+      file_contents = JSON.parse(File.read(File.expand_path(path)))
+      OpenStruct.new(headers: file_contents["headers"], body: file_contents["body"].to_json)
     end
 
     let :auth_success_json do
       {
+        "headers" => auth_success_response.headers,
         "body" => JSON.parse(auth_success_response.body)
       }
     end
@@ -68,13 +69,18 @@ describe NightcrawlerSwift::Connection do
         subject.connect!
         # This test uses 'eq' instead of 'eql' because in Ruby 1.9.x the method
         # 'equal?' is different than '==' making this test fail
-        expect(subject.auth_response.body).to eq(OpenStruct.new(auth_success_json))
+        expect(subject.auth_response.body).to eq(auth_success_json["body"])
+      end
+
+      it "stores the auth response headers" do
+        subject.connect!
+        expect(subject.auth_response.headers).to eq(auth_success_json["headers"])
       end
 
       it "stores the token id" do
         subject.connect!
         expect(subject.token_id).not_to be_nil
-        expect(subject.token_id).to eql(auth_success_json["body"]["access"]["token"]["id"])
+        expect(subject.token_id).to eql(auth_success_json["headers"]["X-Subject-Token"])
       end
 
       it "stores the expires_at" do

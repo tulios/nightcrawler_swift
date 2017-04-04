@@ -1,4 +1,7 @@
 {
+  "headers": {
+    "X-Subject-Token": "12345"
+  },
   "body": {
     "access" : {
       "serviceCatalog" : [
@@ -55,7 +58,6 @@
           "enabled" : true
         },
         "issued_at" : "2014-08-25T17:53:26.667691",
-        "id" : "5",
         "expires" : "2014-08-25T18:53:26Z"
       }
     }

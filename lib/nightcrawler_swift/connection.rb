@@ -50,7 +50,7 @@ module NightcrawlerSwift
       headers = {content_type: :json, accept: :json}
       response = Gateway.new(url).request {|r| r.post(auth_options.to_json, headers)}
 
-      @auth_response = OpenStruct.new(body: JSON.parse(response.body))
+      @auth_response = OpenStruct.new(headers: response.headers, body: JSON.parse(response.body))
     rescue StandardError => e
       raise Exceptions::ConnectionError.new(e)
     end
@@ -65,7 +65,7 @@ module NightcrawlerSwift
     end
 
     def select_token
-      @token_id = auth_response.body["access"]["token"]["id"]
+      @token_id = auth_response.headers["X-Subject-Token"]
       @expires_at = auth_response.body["access"]["token"]["expires"]
       @expires_at = DateTime.parse(@expires_at).to_time
     end
