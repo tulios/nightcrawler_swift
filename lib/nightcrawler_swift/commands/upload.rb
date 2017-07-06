@@ -18,7 +18,7 @@ module NightcrawlerSwift
       headers.merge!(custom_headers) if custom_headers
 
       response = put "#{connection.upload_url}/#{path}", body: body, headers: headers
-      [200, 201].include?(response.code)
+      response.code >= 200 && response.code < 300
     end
 
     private
