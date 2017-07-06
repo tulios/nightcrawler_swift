@@ -2,6 +2,10 @@ module NightcrawlerSwift
   class Upload < Command
 
     def execute path, file, opts = {}
+      if path.nil? or path.empty?
+        raise Exceptions::ValidationError.new "Upload command requires a path parameter"
+      end
+
       body = file.read
       headers = {etag: etag(body), content_type: content_type(file)}
 
