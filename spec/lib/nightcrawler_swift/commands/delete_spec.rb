@@ -25,7 +25,7 @@ describe NightcrawlerSwift::Delete do
 
     context "success" do
       let :response do
-        double(:response, code: 200)
+        double(:response, code: 204)
       end
 
       before do
@@ -39,6 +39,20 @@ describe NightcrawlerSwift::Delete do
 
       it "returns true" do
         expect(execute).to eql true
+      end
+    end
+
+    context "failure" do
+      let :response do
+        double(:response, code: 404)
+      end
+
+      before do
+        allow(subject).to receive(:delete).and_return(response)
+      end
+
+      it "returns false" do
+        expect(execute).to eql false
       end
     end
 
