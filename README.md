@@ -6,6 +6,10 @@
 
 Like the X-Men nightcrawler this gem teleports your assets to a OpenStack Swift bucket/container. It was designed to sync your assets with OpenStack Swift and allow some operations with your buckets/containers.
 
+## Compatibility
+
+nightcrawler_swift version 1.x is compatible with [Identity API v3](https://developer.openstack.org/api-ref/identity/v3/index.html). To use [API v2](https://developer.openstack.org/api-ref/identity/v2/index.html), you should install version 0.x.
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -14,16 +18,28 @@ Add this line to your application's Gemfile:
 gem 'nightcrawler_swift'
 ```
 
+Or, if you want to use Identity API v2:
+
+```ruby
+gem 'nightcrawler_swift', '< 1.0'
+```
+
 And then execute:
 
 ```sh
 $ bundle
 ```
 
-Or install it yourself as:
+Or install it manually:
 
 ```sh
-$ gem install nightcrawler_swift
+$ gem install nightcrawler_swift  # Install latest version
+```
+
+Or set a specific version:
+
+```sh
+$ gem install nightcrawler_swift -v 0.11.1
 ```
 
 ## Usage

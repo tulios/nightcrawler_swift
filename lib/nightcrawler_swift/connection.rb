@@ -50,7 +50,7 @@ module NightcrawlerSwift
       headers = {content_type: :json, accept: :json}
       response = Gateway.new(url).request {|r| r.post(auth_options.to_json, headers)}
 
-      @auth_response = OpenStruct.new(JSON.parse(response.body))
+      @auth_response = OpenStruct.new(headers: response.headers, body: JSON.parse(response.body))
     rescue StandardError => e
       raise Exceptions::ConnectionError.new(e)
     end
@@ -58,32 +58,52 @@ module NightcrawlerSwift
     def auth_options
       {
         auth: {
-          tenantName: opts.tenant_name,
-          passwordCredentials: {username: opts.username, password: opts.password}
+          identity: {
+              methods: [
+                  "password"
+              ],
+              password: {
+                  user: {
+                      domain: {
+                          id: "default"
+                      },
+                      name: opts.username,
+                      password: opts.password
+                  }
+              }
+          },
+          scope: {
+              project: {
+                  domain: {
+                      id: "default"
+                  },
+                  name: opts.tenant_name
+              }
+          }
         }
       }
     end
 
     def select_token
-      @token_id = auth_response.access["token"]["id"]
-      @expires_at = auth_response.access["token"]["expires"]
+      @token_id = auth_response.headers[:x_subject_token]
+      @expires_at = auth_response.body["token"]["expires_at"]
       @expires_at = DateTime.parse(@expires_at).to_time
     end
 
     def select_catalog
-      catalogs = auth_response.access["serviceCatalog"]
+      catalogs = auth_response["body"]["token"]["catalog"]
       @catalog = catalogs.find {|catalog| catalog["type"] == "object-store"}
     end
 
     def select_endpoints
       raise Exceptions::ConfigurationError.new "No catalog of type 'object-store' found" if @catalog.nil?
-      @endpoints = @catalog["endpoints"].first
+      @endpoints = @catalog["endpoints"]
     end
 
     def configure_urls
-      @admin_url = opts.admin_url || @endpoints["adminURL"]
-      @public_url = opts.public_url || @endpoints["publicURL"]
-      @internal_url = opts.internal_url || @endpoints["internalURL"]
+      @admin_url = opts.admin_url || @endpoints.find {|e| e["interface"] == "admin"}["url"]
+      @public_url = opts.public_url || @endpoints.find {|e| e["interface"] == "public"}["url"]
+      @internal_url = opts.internal_url || @endpoints.find {|e| e["interface"] == "internal"}["url"]
       @upload_url = "#{@admin_url}/#{opts.bucket}"
     end
   end

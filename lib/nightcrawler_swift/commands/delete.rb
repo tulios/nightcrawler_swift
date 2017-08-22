@@ -7,7 +7,7 @@ module NightcrawlerSwift
       end
 
       response = delete "#{connection.upload_url}/#{path}", headers: { accept: :json }
-      [200, 201].include?(response.code)
+      response.code >= 200 && response.code < 300
     end
 
   end

@@ -1,62 +1,87 @@
 {
-   "access" : {
-      "serviceCatalog" : [
-         {
-            "name" : "swift",
-            "endpoints_links" : [],
-            "type" : "object-store",
-            "endpoints" : [
-               {
-                  "publicURL" : "http://public-url-com",
-                  "internalURL" : "http://internal-url-com",
-                  "adminURL" : "http://api-url-com",
-                  "region" : "RegionOne",
-                  "id" : "1"
-               }
-            ]
-         },
-         {
-            "name" : "keystone",
-            "endpoints_links" : [],
-            "type" : "identity",
-            "endpoints" : [
-               {
-                  "publicURL" : "http://auth-url-com:123/v2.0",
-                  "internalURL" : "https://auth-url-com:123/v2.0",
-                  "adminURL" : "https://auth-url-com:321/v2.0",
-                  "region" : "RegionOne",
-                  "id" : "2"
-               }
-            ]
-         }
+  "headers": {
+    "X-Subject-Token": "12345"
+  },
+  "body": {
+    "token": {
+      "methods": [
+        "password"
       ],
-      "user" : {
-         "roles" : [
+      "roles": [
+        {
+          "id": "3fe2ff9ee4384b1894a90878d3e92bab",
+          "name": "_member_"
+        },
+        {
+          "id": "c573d00d11ed4f75a7cae8e7527eb1ed",
+          "name": "swiftoperator"
+        }
+      ],
+      "expires_at": "2017-07-06T18:24:31.037559Z",
+      "project": {
+        "domain": {
+          "id": "default",
+          "name": "Default"
+        },
+        "id": "5c6a4110f7f9436b8e1f6696f9f6a13f",
+        "name": "tenant_username1"
+      },
+      "catalog": [
+        {
+          "name" : "swift",
+          "id": "0f7d75e8a91249628ad63356002b4869",
+          "type" : "object-store",
+          "endpoints" : [
             {
-               "name" : "swiftoperator"
+              "region_id": "RegionOne",
+              "url": "http://auth-url-com:123/v3/admin",
+              "region": "RegionOne",
+              "interface": "admin",
+              "id": "a723954cc89d3e93a65c1f658132773d"
+            },
+            {
+              "region_id": "RegionOne",
+              "url": "http://auth-url-com:123/v3/internal",
+              "region": "RegionOne",
+              "interface": "internal",
+              "id": "beea797b69fa47159e44a220ea05c61c"
+            },
+            {
+              "region_id": "RegionOne",
+              "url": "http://auth-url-com:123/v3/public",
+              "region": "RegionOne",
+              "interface": "public",
+              "id": "9e36056aba514263a1d1d8ae10cfb796"
             }
-         ],
-         "roles_links" : [],
-         "name" : "User Name 1",
-         "id" : "3",
-         "username" : "username1"
+          ]
+        },
+        {
+          "name" : "keystone",
+          "id" : "7efb509d3a0b446fa324d0bc4503e6d3",
+          "type" : "identity",
+          "endpoints" : [
+            {
+              "region_id" : "RegionOne",
+              "url" : "http://auth-url-com:123/v3/public",
+              "interface": "public",
+              "id" : "29e36056aba514263a1d1d8ae10cfb79"
+            }
+          ]
+        }
+      ],
+      "extras": {},
+      "user": {
+        "domain": {
+          "id": "default",
+          "name": "Default"
+        },
+        "id": "83e2c39492e343f08b0621ddc2e46eab",
+        "name": "username1"
       },
-      "metadata" : {
-         "roles" : [
-            "4"
-         ],
-         "is_admin" : 0
-      },
-      "token" : {
-         "tenant" : {
-            "name" : "tenant_username1",
-            "id" : "5",
-            "description" : "some desc",
-            "enabled" : true
-         },
-         "issued_at" : "2014-08-25T17:53:26.667691",
-         "id" : "5",
-         "expires" : "2014-08-25T18:53:26Z"
-      }
-   }
+      "audit_ids": [
+        "B77HzuC7QimfKre8DhDrhw"
+      ],
+      "issued_at": "2017-07-06T17:24:31.037629Z"
+    }
+  }
 }

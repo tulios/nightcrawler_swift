@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    nightcrawler_swift (0.11.1)
+    nightcrawler_swift (1.0.0)
       concurrent-ruby (~> 0.8.0)
       multi_mime (>= 1.1.0)
       rest-client
@@ -21,7 +21,7 @@ GEM
     debugger-linecache (1.2.0)
     diff-lcs (1.2.5)
     docile (1.1.5)
-    domain_name (0.5.20160826)
+    domain_name (0.5.20170404)
       unf (>= 0.0.5, < 1.0.0)
     http-cookie (1.0.3)
       domain_name (~> 0.5)
@@ -33,7 +33,7 @@ GEM
     netrc (0.11.0)
     rake (10.3.2)
     ref (1.0.5)
-    rest-client (2.0.0)
+    rest-client (2.0.2)
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
@@ -58,7 +58,7 @@ GEM
     timecop (0.8.0)
     unf (0.1.4)
       unf_ext
-    unf_ext (0.0.7.2)
+    unf_ext (0.0.7.4)
 
 PLATFORMS
   ruby
@@ -73,4 +73,4 @@ DEPENDENCIES
   timecop
 
 BUNDLED WITH
-   1.13.5
+   1.15.3

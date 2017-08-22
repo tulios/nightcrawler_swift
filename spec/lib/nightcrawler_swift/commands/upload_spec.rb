@@ -165,6 +165,13 @@ describe NightcrawlerSwift::Upload do
       let(:response) { double(:response, code: 500) }
       it { expect(execute).to be false }
     end
+
+    context "when the path was not informed" do
+      it "raises NightcrawlerSwift::Exceptions::ValidationError" do
+        expect { subject.execute(nil, file) }.to raise_error NightcrawlerSwift::Exceptions::ValidationError
+        expect { subject.execute("", file) }.to raise_error NightcrawlerSwift::Exceptions::ValidationError
+      end
+    end
   end
 
 end

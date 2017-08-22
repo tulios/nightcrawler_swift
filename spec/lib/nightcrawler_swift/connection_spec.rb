@@ -8,7 +8,7 @@ describe NightcrawlerSwift::Connection do
       tenant_name: "tenant_username1",
       username: "username1",
       password: "some-pass",
-      auth_url: "https://auth-url-com:123/v2.0/tokens",
+      auth_url: "https://auth-url-com:123/v3/auth/tokens",
       max_age: 31536000 # 1 year
     }
   end
@@ -30,19 +30,48 @@ describe NightcrawlerSwift::Connection do
     let :auth_json do
       {
         auth: {
-          tenantName: opts[:tenant_name],
-          passwordCredentials: {username: opts[:username], password: opts[:password]}
+          identity: {
+            methods: [
+                "password"
+            ],
+            password: {
+              user: {
+               domain: {
+                 id: "default"
+               },
+               name: opts[:username],
+               password: opts[:password]
+              }
+            }
+          },
+          scope: {
+            project: {
+              domain: {
+                id: "default"
+              },
+              name: opts[:tenant_name]
+            }
+          }
         }
       }.to_json
     end
 
     let :auth_success_response do
       path = File.join(File.dirname(__FILE__), "../..", "fixtures/auth_success.json")
-      OpenStruct.new(body: File.read(File.expand_path(path)))
+      file_contents = JSON.parse(File.read(File.expand_path(path)))
+      headers = file_contents["headers"].reduce({}) do |h, item|
+        key, value = item
+        h[key.downcase.gsub("-", "_").to_sym] = value
+        h
+      end
+      OpenStruct.new(headers: headers, body: file_contents["body"].to_json)
     end
 
     let :auth_success_json do
-      JSON.parse(auth_success_response.body)
+      {
+        "headers" => auth_success_response.headers,
+        "body" => JSON.parse(auth_success_response.body)
+      }
     end
 
     describe "when it connects" do
@@ -61,48 +90,55 @@ describe NightcrawlerSwift::Connection do
           and_return(auth_success_response)
       end
 
-      it "stores the auth_response" do
+      it "stores the auth response body" do
         subject.connect!
         # This test uses 'eq' instead of 'eql' because in Ruby 1.9.x the method
         # 'equal?' is different than '==' making this test fail
-        expect(subject.auth_response).to eq(OpenStruct.new(auth_success_json))
+        expect(subject.auth_response.body).to eq(auth_success_json["body"])
+      end
+
+      it "stores the auth response headers" do
+        subject.connect!
+        expect(subject.auth_response.headers).to eq(auth_success_json["headers"])
       end
 
       it "stores the token id" do
         subject.connect!
-        expect(subject.token_id).to eql(auth_success_json["access"]["token"]["id"])
+        expect(subject.token_id).not_to be_nil
+        expect(subject.token_id).to eql(auth_success_json["headers"][:x_subject_token])
       end
 
       it "stores the expires_at" do
         subject.connect!
-        expires_at = DateTime.parse(auth_success_json["access"]["token"]["expires"]).to_time
+        expires_at = DateTime.parse(auth_success_json["body"]["token"]["expires_at"]).to_time
         expect(subject.expires_at).to eql(expires_at)
       end
 
       it "stores the catalog" do
-        expect(subject).to receive(:connect!).and_call_original
-        expect(subject.catalog).to eql(auth_success_json["access"]["serviceCatalog"][0])
+        subject.connect!
+        expect(subject.catalog).to eql(auth_success_json["body"]["token"]["catalog"][0])
+        expect(subject.catalog["type"]).to eql("object-store")
       end
 
       it "stores the admin_url" do
-        expect(subject).to receive(:connect!).and_call_original
-        expect(subject.admin_url).to eql(auth_success_json["access"]["serviceCatalog"].first["endpoints"].first["adminURL"])
+        subject.connect!
+        expect(subject.admin_url).to eql(auth_success_json["body"]["token"]["catalog"][0]["endpoints"][0]["url"])
       end
 
       it "stores the upload_url" do
+        subject.connect!
         admin_url = subject.admin_url
-        expect(subject).to receive(:connect!).and_call_original
         expect(subject.upload_url).to eql("#{admin_url}/#{opts[:bucket]}")
       end
 
       it "stores the public_url" do
-        expect(subject).to receive(:connect!).and_call_original
-        expect(subject.public_url).to eql(auth_success_json["access"]["serviceCatalog"].first["endpoints"].first["publicURL"])
+        subject.connect!
+        expect(subject.public_url).to eql(auth_success_json["body"]["token"]["catalog"][0]["endpoints"][2]["url"])
       end
 
       it "stores the internal_url" do
-        expect(subject).to receive(:connect!).and_call_original
-        expect(subject.internal_url).to eql(auth_success_json["access"]["serviceCatalog"].first["endpoints"].first["internalURL"])
+        subject.connect!
+        expect(subject.internal_url).to eql(auth_success_json["body"]["token"]["catalog"][0]["endpoints"][1]["url"])
       end
 
       it "returns self" do
@@ -111,7 +147,7 @@ describe NightcrawlerSwift::Connection do
 
       context "and there isn't any catalog configured" do
         before do
-          auth_success_json["access"]["serviceCatalog"] = []
+          auth_success_json["body"]["token"]["catalog"] = []
           allow(subject).to receive(:auth_response).and_return(OpenStruct.new(auth_success_json))
         end
 
