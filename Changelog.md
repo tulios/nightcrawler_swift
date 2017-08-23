@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.0
+
+  - Add support to Keystone v3 (issue #34)
+
 ## 0.11.1
 
   - Remove "Thread.exclusive is deprecated, use Mutex" warning
